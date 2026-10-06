@@ -45,6 +45,17 @@ input.bad{border-color:var(--err);outline:1px solid var(--err)}
 .gx{position:absolute;top:3px;right:3px;width:22px;height:22px;border:0;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;cursor:pointer;line-height:1;font-size:15px}
 .gadd{width:72px;height:96px;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:var(--mute);cursor:pointer;padding:4px;user-select:none}
 .gadd.over{border-color:var(--ok);color:var(--ok)}
+.cores-ed{display:grid;gap:8px}
+.cor-row{display:grid;grid-template-columns:44px 1fr 40px;gap:8px;align-items:center}
+input[type=color]{width:44px;height:38px;padding:2px;border:1px solid var(--line);background:var(--card);cursor:pointer}
+.cores-ed>.btn{justify-self:start}
+textarea{width:100%;padding:10px 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;border-radius:0;resize:vertical}
+.tbmd{display:flex;gap:6px;margin-bottom:6px}
+.tbmd button{min-width:34px;padding:4px 10px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;font:inherit}
+.md{font-size:14px}.md p{margin:0 0 .7em}.md ul{margin:0 0 .7em;padding-left:1.2em}.md>:last-child{margin-bottom:0}
+.pv{border:1px dashed var(--line);padding:10px 12px;min-height:40px;color:var(--ink)}
+details.mais{border:0;padding:0}details.mais>summary{font:600 12px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);cursor:pointer}
+details.mais[open]>summary{margin-bottom:10px}details.mais>*+*{margin-top:10px}
 .bar{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));z-index:5}
 .bar .wrap{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:0}
 #status{font-size:13px;color:var(--mute);min-height:1.4em}
@@ -82,6 +93,7 @@ input.bad{border-color:var(--err);outline:1px solid var(--err)}
   <p class="sub">Edite nome, preço e estoque, adicione ou remova fotos (clique numa foto para torná-la a capa) e desative ou remova peças. Estoque 0 mostra “Esgotado”.</p>
   <div class="list" id="list"><p class="hint">Conecte ao GitHub para carregar.</p></div>
 </section>
+<p class="hint" style="text-align:center">Admin v1.0.0</p>
 </div>
 
 <div class="bar"><div class="wrap">
@@ -94,6 +106,21 @@ const $=s=>document.querySelector(s);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const slug=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 const num=v=>parseFloat(String(v).replace(',','.'));
+/* Markdown básico (igual ao do site): **negrito**, *itálico*, listas com "- ", parágrafos. Escapa HTML. */
+function md(src){
+  const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const il=s=>esc(s)
+    .replace(/\*\*([^\s*](?:[^*]*?[^\s*])?)\*\*/g,'<strong>$1</strong>')
+    .replace(/__([^\s_](?:[^_]*?[^\s_])?)__/g,'<strong>$1</strong>')
+    .replace(/(^|[^*\w])\*([^\s*](?:[^*]*?[^\s*])?)\*(?!\*)/g,'$1<em>$2</em>')
+    .replace(/(^|[^_\w])_([^\s_](?:[^_]*?[^\s_])?)_(?![_\w])/g,'$1<em>$2</em>');
+  const li=/^\s*[-*•]\s+/;
+  return String(src||'').replace(/\r/g,'').trim().split(/\n{2,}/).filter(Boolean).map(b=>{
+    const ls=b.split('\n');
+    if(ls.every(l=>li.test(l)))return '<ul>'+ls.map(l=>'<li>'+il(l.replace(li,''))+'</li>').join('')+'</ul>';
+    return '<p>'+ls.map(il).join('<br>')+'</p>';
+  }).join('');
+}
 const status=(m,cls)=>{const s=$('#status');s.textContent=m;s.className=cls||''};
 let C={},items=[],orig='[]',drafts=[],seq=0,conectado=false;
 const G=new Map();      // peça publicada -> lista de fotos em edição
@@ -104,6 +131,51 @@ const lista=it=>it.fotos&&it.fotos.length?it.fotos.slice():(it.foto?[it.foto]:[]
 const primeiraCat=i=>[].concat(i.categoria||[])[0]||'';
 const categorias=()=>[...new Set([...items.map(primeiraCat),...drafts.map(d=>d.cat)].filter(Boolean))];
 const gal=it=>{if(!G.has(it))G.set(it,lista(it).map(p=>({path:p,url:'../'+p})));return G.get(it)};
+
+/* ---------- cores e descrição (peças novas e publicadas) ---------- */
+function toHex(v){try{const c=document.createElement('canvas').getContext('2d');c.fillStyle='#000000';c.fillStyle=v;return /^#[0-9a-f]{6}$/i.test(c.fillStyle)?c.fillStyle:'#000000'}catch{return '#000000'}}
+function editorCores(o){
+  const box=el('div'),lista=el('div','cores-ed');
+  box.append(el('label',0,'Cores disponíveis (opcional)'),lista);
+  const desenhar=()=>{
+    lista.replaceChildren();
+    (o.cores||[]).forEach((c,i)=>{
+      const r=el('div','cor-row'),pk=el('input'),nm=el('input'),x=el('button','btn ghost sm','×');
+      pk.type='color';pk.value=toHex(c.valor);pk.setAttribute('aria-label','Escolher cor');pk.oninput=()=>{c.valor=pk.value;atualizaBotao()};
+      nm.type='text';nm.value=c.nome||'';nm.placeholder='Nome da cor (ex.: Preto)';nm.oninput=()=>{c.nome=nm.value;atualizaBotao()};
+      x.type='button';x.setAttribute('aria-label','Remover cor');
+      x.onclick=()=>{o.cores.splice(i,1);if(!o.cores.length)delete o.cores;desenhar();atualizaBotao()};
+      r.append(pk,nm,x);lista.append(r);
+    });
+    const a=el('button','btn ghost sm','+ cor');a.type='button';
+    a.onclick=()=>{(o.cores=o.cores||[]).push({nome:'',valor:'#1c1814'});desenhar();atualizaBotao()};
+    lista.append(a);
+  };
+  desenhar();return box;
+}
+function editorDescricao(o){
+  const w=el('div'),ta=el('textarea'),bar=el('div','tbmd'),pv=el('div','md pv');
+  ta.rows=4;ta.value=o.descricao||'';ta.placeholder='Detalhes da peça, composição, cuidados…';
+  const att=()=>{if(ta.value.trim())o.descricao=ta.value;else delete o.descricao;pv.innerHTML=md(ta.value);atualizaBotao()};
+  const env=(a,b)=>{
+    let s=ta.selectionStart,e=ta.selectionEnd;const t=ta.value;
+    while(s<e&&/\s/.test(t[s]))s++;while(e>s&&/\s/.test(t[e-1]))e--; // espaços ficam fora das marcas
+    ta.value=t.slice(0,s)+a+t.slice(s,e)+b+t.slice(e);ta.focus();ta.setSelectionRange(s+a.length,e+a.length);att();
+  };
+  const lst=()=>{
+    const t=ta.value,s=ta.selectionStart,e=ta.selectionEnd,i=t.lastIndexOf('\n',s-1)+1;let j=t.indexOf('\n',e);if(j<0)j=t.length;
+    const ls=t.slice(i,j).split('\n'),todas=ls.every(l=>/^\s*-\s+/.test(l));
+    const nv=ls.map(l=>todas?l.replace(/^\s*-\s+/,''):(/^\s*-\s+/.test(l)?l:'- '+l)).join('\n');
+    ta.value=t.slice(0,i)+nv+t.slice(j);ta.focus();ta.setSelectionRange(i,i+nv.length);att();
+  };
+  [['N',()=>env('**','**'),'Negrito','font-weight:700'],['I',()=>env('*','*'),'Itálico','font-style:italic'],['• Lista',lst,'Lista com marcadores','']].forEach(([t,f,tt,st])=>{
+    const b=el('button',0,t);b.type='button';b.title=tt;b.setAttribute('aria-label',tt);b.style.cssText=st;b.onclick=f;bar.append(b);
+  });
+  ta.oninput=att;pv.innerHTML=md(o.descricao||'');
+  w.append(el('label',0,'Descrição (aceita **negrito**, *itálico* e listas com “- ”)'),bar,ta,el('label',0,'Pré-visualização'),pv);
+  return w;
+}
+const abertos=new Set();
 
 /* ---------- configuração ---------- */
 function loadCfg(){
@@ -136,6 +208,7 @@ async function carregar(){
     const bin=atob(f.content.replace(/\s/g,''));
     items=JSON.parse(new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0))));
   }catch(e){if(e.status===404)items=[];else throw e}
+  items.forEach(it=>{if(it.cores)it.cores=it.cores.map(c=>typeof c==='string'?{nome:c,valor:c}:c)});
   orig=JSON.stringify(items);G.clear();sujos.clear();conectado=true;
   status(items.length+' peça(s) carregada(s).','ok');
   render();
@@ -171,9 +244,9 @@ async function criarPecas(files,cat){
   if(!cat){status('Digite o nome da nova categoria antes de soltar as fotos.','err');return}
   const fotos=await lerFotos(files);if(!fotos.length)return;
   if($('#agrupar').checked){
-    drafts.push({id:++seq,nome:limpar(fotos[0].arq).replace(/\s*\d+$/,''),preco:'',tam:'',estoque:1,cat,fotos});
+    drafts.push({id:++seq,nome:limpar(fotos[0].arq).replace(/\s*\d+$/,''),preco:'',tam:'',estoque:1,cat,fotos,cores:[],descricao:''});
   }else{
-    fotos.forEach(f=>drafts.push({id:++seq,nome:limpar(f.arq),preco:'',tam:'',estoque:1,cat,fotos:[f]}));
+    fotos.forEach(f=>drafts.push({id:++seq,nome:limpar(f.arq),preco:'',tam:'',estoque:1,cat,fotos:[f],cores:[],descricao:''}));
   }
   render();
   status(fotos.length+' foto(s) adicionada(s). Preencha nome e preço e clique em Publicar.','ok');
@@ -245,7 +318,7 @@ function renderDrafts(){
     const r=el('div','row c4');r.append(campo('Nome','nome'),campo('Preço (R$)','preco','89,90'),campo('Tamanhos','tam','P, M, G'),campo('Estoque','estoque','','number'));
     const rc=el('div','row c2'),cw=campo('Categoria','cat');cw.querySelector('input').setAttribute('list','cats');rc.append(cw);
     const x=el('button','btn ghost sm','Remover peça');x.type='button';x.style.justifySelf='start';x.onclick=()=>{drafts=drafts.filter(z=>z!==d);render()};
-    c.append(galeria(d.fotos,render),r,rc,p,x);box.append(c);
+    c.append(galeria(d.fotos,render),r,rc,editorCores(d),editorDescricao(d),p,x);box.append(c);
   });
   let dl=$('#cats');if(!dl){dl=el('datalist');dl.id='cats';document.body.append(dl)}
   dl.replaceChildren(...categorias().map(c=>{const o=el('option');o.value=c;return o}));
@@ -267,7 +340,10 @@ function renderList(){
     const x=el('button','btn ghost sm','Remover peça');x.type='button';
     x.onclick=()=>{if(confirm('Remover "'+it.nome+'" do site?')){items=items.filter(z=>z!==it);G.delete(it);sujos.delete(it);render()}};
     m.append(lb,x);
-    row.append(f,galeria(gal(it),()=>{sujos.add(it);render()}),m);
+    const mais=el('details','mais');mais.open=abertos.has(it);
+    mais.addEventListener('toggle',()=>{if(mais.open)abertos.add(it);else abertos.delete(it)});
+    mais.append(el('summary',0,'Cores e descrição'+((it.cores&&it.cores.length)||it.descricao?' •':'')),editorCores(it),editorDescricao(it));
+    row.append(f,galeria(gal(it),()=>{sujos.add(it);render()}),mais,m);
     l.append(row);
   });
 }
@@ -298,7 +374,14 @@ async function publicar(){
   try{
     const plano=planejar();
     const final=items.map(it=>G.has(it)?aplicar({...it},G.get(it).map(e=>e.path||plano.get(e))):it);
-    drafts.forEach(d=>final.push(aplicar({nome:d.nome.trim(),preco:num(d.preco),categoria:d.cat.trim(),tamanhos:d.tam.split(/[,;\s]+/).filter(Boolean),estoque:Math.max(0,parseInt(d.estoque)||0)},d.fotos.map(e=>plano.get(e)))));
+    drafts.forEach(d=>final.push(aplicar({nome:d.nome.trim(),preco:num(d.preco),categoria:d.cat.trim(),tamanhos:d.tam.split(/[,;\s]+/).filter(Boolean),cores:d.cores,estoque:Math.max(0,parseInt(d.estoque)||0),descricao:d.descricao},d.fotos.map(e=>plano.get(e)))));
+    const limparItem=o=>{
+      const r={...o},cs=(r.cores||[]).map(c=>({nome:(c.nome||'').trim()||c.valor,valor:c.valor})).filter(c=>c.valor);
+      if(cs.length)r.cores=cs;else delete r.cores;
+      const ds=(r.descricao||'').trim();if(ds)r.descricao=ds;else delete r.descricao;
+      return r;
+    };
+    final.forEach((o,i)=>{final[i]=limparItem(o)});
 
     status('Lendo o repositório…');
     const head=(await gh('/git/ref/heads/'+C.branch)).object.sha;
