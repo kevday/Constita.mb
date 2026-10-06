@@ -8,7 +8,11 @@
       "M"
     ],
     "estoque": 1,
-    "foto": "img/blusas/blusa-aurora.jpg"
+    "foto": "img/blusas/blusa-aurora.jpg",
+    "fotos": [
+      "img/blusas/blusa-aurora.jpg",
+      "img/blusas/blusa-aurora-2.jpg"
+    ]
   },
   {
     "nome": "Vestido Mídi Aurora",
