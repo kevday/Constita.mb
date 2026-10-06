@@ -6,7 +6,7 @@
 <title>CONSTITA — Últimas peças. Novos caminhos.</title>
 <meta name="description" content="Últimas peças da coleção atual, com atendimento online pelo WhatsApp.">
 <meta property="og:title" content="CONSTITA — Últimas peças. Novos caminhos.">
-<link rel="icon" href="img/k.svg">
+<link rel="icon" href="img/k.jpg">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap">
 <style>
 :root{--bg:#faf8f4;--ink:#1c1814;--mute:#7a7066;--line:#e6dfd4;--card:#f3eee6;--dk:#1c1814;--dkt:#faf8f4;
@@ -64,6 +64,11 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 @media(min-width:800px){.grid{grid-template-columns:repeat(4,1fr);gap:40px 24px}}
 .ph{aspect-ratio:3/4;position:relative;overflow:hidden}
 .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph .pf{opacity:0;transition:opacity .25s}.ph .pf.on{opacity:1}
+.ph.multi{cursor:pointer}.ph:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.dots{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:5px;z-index:1;pointer-events:none}
+.dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+.dots i.on{background:#fff}
 .badge{position:absolute;top:10px;left:10px;z-index:1;font-size:9px;letter-spacing:.16em;background:var(--bg);color:var(--ink);padding:4px 8px;text-transform:uppercase}
 .info{padding-top:14px;display:flex;flex-direction:column;gap:4px}
 .info h3{font-size:20px}
@@ -116,7 +121,7 @@ footer .logo{margin-bottom:12px;color:var(--ink);font-size:22px}
 <body>
 <div class="erro" id="erro" role="alert"></div>
 <header><div class="wrap">
-  <a class="logo" href="#topo"><img src="img/k.svg" alt="" width="34" height="34"><span id="logo">CONSTITA</span></a>
+  <a class="logo" href="#topo"><img src="img/k.jpg" alt="" width="34" height="34"><span id="logo">CONSTITA</span></a>
   <button class="cartbtn" id="open" type="button">Carrinho (<span id="cnt">0</span>)</button>
 </div></header>
 
@@ -163,11 +168,11 @@ footer .logo{margin-bottom:12px;color:var(--ink);font-size:22px}
 </main>
 
 <footer><div class="wrap">
-  <a class="logo" href="#topo"><img src="img/k.svg" alt="" width="26" height="26"><span id="f-logo"></span></a><br>
+  <a class="logo" href="#topo"><img src="img/k.jpg" alt="" width="26" height="26"><span id="f-logo"></span></a><br>
   <span id="f-frase"></span><br><span id="f-frase2"></span><br><span id="f-horario"></span>
 </div></footer>
 
-<a class="wa" id="wa" target="_blank" rel="noopener">WhatsApp</a>
+<a class="wa" id="wa" target="_blank" rel="noopener" aria-label="Falar pelo WhatsApp">WhatsApp</a>
 
 <div class="ov" id="ov"></div>
 <aside class="drawer" id="drawer" aria-label="Carrinho">
@@ -204,8 +209,51 @@ function foto(box,p){
   const i=new Image();i.alt=p.nome;i.loading='lazy';i.onerror=()=>i.remove();i.src=p.foto;box.append(i);
 }
 
+/* Várias fotos: toque/clique troca a foto; bolinhas indicam a posição */
+const IDX={};
+function galeria(ph,p){
+  const L=p.imgs;if(!L.length)return;
+  const dots=el('div','dots'),imgs=()=>[...ph.querySelectorAll('.pf')];
+  function show(){
+    const l=imgs();if(!l.length){dots.replaceChildren();return}
+    const i=((IDX[p.id]||0)%l.length+l.length)%l.length;IDX[p.id]=i;
+    l.forEach((x,k)=>x.classList.toggle('on',k===i));
+    dots.replaceChildren(...(l.length>1?l.map((_,k)=>el('i',k===i?'on':'')):[]));
+    if(l.length>1){
+      ph.classList.add('multi');ph.setAttribute('aria-label','Foto '+(i+1)+' de '+l.length+' de '+p.nome+'. Ativar para ver a próxima');
+    }else{ph.classList.remove('multi');ph.removeAttribute('role');ph.removeAttribute('tabindex');ph.removeAttribute('aria-label')}
+  }
+  L.forEach((src,i)=>{
+    const im=new Image();im.className='pf';im.alt=p.nome;im.decoding='async';if(i)im.loading='lazy';
+    im.onerror=()=>{im.remove();show()};im.src=src;ph.append(im);
+  });
+  ph.append(dots);
+  if(L.length>1){
+    ph.setAttribute('role','button');ph.tabIndex=0;
+    const prox=()=>{IDX[p.id]=(IDX[p.id]||0)+1;show()};
+    ph.addEventListener('click',prox);
+    ph.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();prox()}});
+  }
+  show();
+}
+
+/* Carrinho salvo no navegador (por nome da peça; só volta o que ainda está em estoque) */
+const CK='constita-cart';
+function loadCart(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(CK)||'[]');if(!Array.isArray(raw))return [];
+    const vistos=new Set();
+    return raw.map(r=>{
+      const p=P.find(x=>x.nome===r.nome&&x.estoque>0);if(!p||vistos.has(p.id))return null;
+      vistos.add(p.id);if(r.tam&&p.tams.includes(r.tam))TAM[p.id]=r.tam;
+      return {id:p.id,nome:p.nome,preco:p.preco,tam:TAM[p.id]||'',cor:p.cor||COR,foto:p.imgs[0]};
+    }).filter(Boolean);
+  }catch(e){try{localStorage.removeItem(CK)}catch(_){}return []}
+}
+function saveCart(){try{localStorage.setItem(CK,JSON.stringify(cart.map(x=>({nome:x.nome,tam:x.tam}))))}catch(e){}}
+
 function card(p){
-  const a=el('article'),ph=el('div','ph');ph.style.background=p.cor||COR;foto(ph,p);
+  const a=el('article'),ph=el('div','ph');ph.style.background=p.cor||COR;galeria(ph,p);
   if(badge(p))ph.append(el('span','badge',badge(p)));
   const info=el('div','info'),pr=el('div','pr');
   info.append(el('h3',0,p.nome));
@@ -236,7 +284,7 @@ function renderTrack(){
 }
 function renderCart(){
   const tot=cart.reduce((a,x)=>a+x.preco,0);
-  set('#cnt',cart.length);set('#total',brl(tot));
+  set('#cnt',cart.length);set('#total',brl(tot));saveCart();
   $('#items').replaceChildren(...(cart.length?cart.map(x=>{
     const it=el('div','it'),sw=el('div','sw');sw.style.background=x.cor;foto(sw,x);
     const d=el('div','d');d.append(el('b',0,x.nome),el('small',0,(x.tam?'Tam. '+x.tam+' · ':'')+brl(x.preco)));
@@ -254,7 +302,7 @@ function add(id){
   const p=P.find(x=>x.id===id);if(!p||!(p.estoque>0))return;
   if(cart.some(x=>x.id===id)){cart=cart.filter(x=>x.id!==id);draw();return}
   if(p.tams.length&&!TAM[id]){need=id;draw();return}
-  cart.push({id,nome:p.nome,preco:p.preco,tam:TAM[id]||'',cor:p.cor||COR,foto:p.foto});
+  cart.push({id,nome:p.nome,preco:p.preco,tam:TAM[id]||'',cor:p.cor||COR,foto:p.imgs[0]});
   need=0;draw();toggle(true);
 }
 
@@ -310,9 +358,9 @@ addEventListener('scroll',()=>document.body.classList.toggle('scrolled',scrollY>
 (async()=>{
   try{
     let lista;[S,lista]=await Promise.all([json('data/site.json'),json('data/produtos.json')]);
-    P=lista.filter(p=>p.ativo!==false).map((p,i)=>({...p,id:i+1,cats:[].concat(p.categoria||[]),tams:p.tamanhos||[]}));
+    P=lista.filter(p=>p.ativo!==false).map((p,i)=>({...p,id:i+1,cats:[].concat(p.categoria||[]),tams:p.tamanhos||[],imgs:p.fotos&&p.fotos.length?p.fotos:(p.foto?[p.foto]:[])}));
     P.forEach(p=>{if(p.tams.length===1)TAM[p.id]=p.tams[0]});
-    texto();carrossel();draw();
+    cart=loadCart();texto();carrossel();draw();
   }catch(e){
     console.error(e);
     erro(location.protocol==='file:'

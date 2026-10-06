@@ -1,72 +1,192 @@
 [
   {
-    "nome": "Blusa básica manga curta",
-    "preco": 59.9,
+    "nome": "Blusa Aurora",
+    "preco": 99.9,
     "categoria": "Blusas",
+    "tamanhos": [
+      "P",
+      "M"
+    ],
+    "estoque": 1,
+    "foto": "img/blusas/blusa-aurora.jpg"
+  },
+  {
+    "nome": "Vestido Mídi Aurora",
+    "preco": 199.9,
+    "categoria": "Vestidos",
     "tamanhos": [
       "P",
       "M",
       "G"
     ],
-    "estoque": 2,
-    "foto": "img/blusa-basica.jpg"
+    "estoque": 5,
+    "foto": "img/vestidos/vestido-midi-aurora.jpg"
   },
   {
-    "nome": "Calça alfaiataria",
-    "preco": 129.9,
-    "categoria": "Calças",
+    "nome": "Colete Chek Linho",
+    "preco": 119.9,
+    "categoria": "Colete",
     "tamanhos": [
-      "38",
-      "40",
-      "42"
+      "P"
     ],
     "estoque": 1,
-    "foto": "img/calca-alfaiataria.jpg"
+    "foto": "img/colete/colete-chek-linho.jpg"
   },
   {
-    "nome": "Vestido midi",
-    "preco": 149.9,
-    "categoria": "Vestidos",
+    "nome": "Blusa Bata MyPlace",
+    "preco": 199.9,
+    "categoria": "Blusas",
     "tamanhos": [
       "M",
       "G"
     ],
-    "estoque": 0,
-    "foto": "img/vestido-midi.jpg"
+    "estoque": 1,
+    "foto": "img/blusas/blusa-bata-myplace.jpg"
   },
   {
-    "nome": "Regata canelada",
-    "preco": 79.9,
+    "nome": "Blusa Manga Longa",
+    "preco": 179.9,
+    "categoria": "Blusas",
+    "tamanhos": [
+      "G"
+    ],
+    "estoque": 1,
+    "foto": "img/blusas/blusa-manga-longa.jpg"
+  },
+  {
+    "nome": "Vestido Longo",
+    "preco": 249.9,
+    "categoria": "Vestidos",
+    "tamanhos": [
+      "P",
+      "G"
+    ],
+    "estoque": 1,
+    "foto": "img/vestidos/vestido-longo.jpg"
+  },
+  {
+    "nome": "Blusa Bata",
+    "preco": 239.9,
+    "categoria": "Blusas",
+    "tamanhos": [
+      "P",
+      "G"
+    ],
+    "estoque": 1,
+    "foto": "img/blusas/blusa-bata.jpg"
+  },
+  {
+    "nome": "Blazer Rose",
+    "preco": 299.9,
+    "categoria": "Blazers",
+    "tamanhos": [
+      "M",
+      "G"
+    ],
+    "estoque": 5,
+    "foto": "img/blazers/blazer-rose.jpg"
+  },
+  {
+    "nome": "Blusa Floral MyPlace",
+    "preco": 99.9,
     "categoria": "Blusas",
     "tamanhos": [
       "P",
       "M"
     ],
     "estoque": 3,
-    "foto": "img/regata-canelada.jpg"
+    "foto": "img/blusas/blusa-floral-myplace.jpg"
   },
   {
-    "nome": "Shorts de linho",
+    "nome": "Blusa Via Tricot",
     "preco": 99.9,
+    "categoria": "Blusas",
+    "tamanhos": [
+      "G"
+    ],
+    "estoque": 1,
+    "foto": "img/blusas/blusa-via-tricot.jpg"
+  },
+  {
+    "nome": "Calça MyPlace",
+    "preco": 199.9,
     "categoria": "Calças",
     "tamanhos": [
-      "P",
+      "G"
+    ],
+    "estoque": 1,
+    "foto": "img/calcas/calca-myplace.jpg"
+  },
+  {
+    "nome": "Blusa Regata Chek",
+    "preco": 99.9,
+    "categoria": "Blusas",
+    "tamanhos": [
+      "P"
+    ],
+    "estoque": 1,
+    "foto": "img/blusas/blusa-regata-chek.jpg"
+  },
+  {
+    "nome": "Calça Aladin",
+    "preco": 199.9,
+    "categoria": "Calças",
+    "tamanhos": [
+      "G"
+    ],
+    "estoque": 1,
+    "foto": "img/calcas/calca-aladin.jpg"
+  },
+  {
+    "nome": "Vestido Midi",
+    "preco": 239.9,
+    "categoria": "Vestidos",
+    "tamanhos": [
+      "M"
+    ],
+    "estoque": 1,
+    "foto": "img/vestidos/vestido-midi.jpg"
+  },
+  {
+    "nome": "Calça Risca de Giz",
+    "preco": 219.9,
+    "categoria": "Calças",
+    "tamanhos": [
       "M",
       "G"
     ],
-    "estoque": 4,
-    "foto": "img/shorts-linho.jpg"
+    "estoque": 1,
+    "foto": "img/calcas/calca-risca-de-giz.jpg"
   },
   {
-    "nome": "Saia midi plissada",
-    "preco": 119.9,
-    "categoria": "Vestidos",
+    "nome": "Blazer Via Tricot",
+    "preco": 179.9,
+    "categoria": "Blazers",
     "tamanhos": [
-      "36",
-      "38",
-      "40"
+      "P"
     ],
-    "estoque": 2,
-    "foto": "img/saia-plissada.jpg"
+    "estoque": 3,
+    "foto": "img/blazers/blazer-via-tricot.jpg"
+  },
+  {
+    "nome": "Calça Poá",
+    "preco": 179.9,
+    "categoria": "Calças",
+    "tamanhos": [
+      "M"
+    ],
+    "estoque": 3,
+    "foto": "img/calcas/calca-poa.jpg"
+  },
+  {
+    "nome": "Blusa Tricot",
+    "preco": 99.9,
+    "categoria": "Blusas",
+    "tamanhos": [
+      "P",
+      "M"
+    ],
+    "estoque": 3,
+    "foto": "img/blusas/blusa-tricot.jpg"
   }
 ]
