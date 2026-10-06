@@ -188,5 +188,37 @@
     ],
     "estoque": 3,
     "foto": "img/blusas/blusa-tricot.jpg"
+  },
+  {
+    "nome": "Shorts linho",
+    "preco": 329.9,
+    "categoria": "Shorts",
+    "tamanhos": [
+      "P",
+      "M",
+      "G"
+    ],
+    "cores": [
+      {
+        "nome": "Azul claro",
+        "valor": "#99c1f1"
+      },
+      {
+        "nome": "Amarelo",
+        "valor": "#f9f06b"
+      },
+      {
+        "nome": "Branco",
+        "valor": "#ffffff"
+      }
+    ],
+    "estoque": 5,
+    "descricao": "Este ***short de linho*** é a definição de elegância e conforto. Com um fechamento frontal sofisticado, que combina um zíper discreto e um botão **revestido pelo próprio tecido**, garante um ajuste impecável e um toque de classe. Os dois bolsos laterais são funcionais e adicionam um detalhe prático ao design clean. O **forro interno proporciona um acabamento suave e evita transparências**, elevando ainda mais o conforto e a qualidade. A barra italiana confere um visual moderno e estiloso, enquanto o passante para cinto no cós oferece a flexibilidade de personalizar o look. Ideal para criar combinações sofisticadas e frescas para qualquer ocasião.\n\n- PP - Cintura 76 cm | Quadril 104 cm | Comprimento 37 cm\n- P -  Cintura 79 cm | Quadril 107 cm | Comprimento 40 cm\n- M - Cintura 82 cm | Quadril 110 cm | Comprimento 43 cm\n- G - Cintura 85 cm | Quadril 113 cm | Comprimento 46 cm\n\n**COMPOSIÇÃO:**\n*100% Linho*\n**Forro**\n*100% Poliéster.*",
+    "foto": "img/shorts/shorts-linho.jpg",
+    "fotos": [
+      "img/shorts/shorts-linho.jpg",
+      "img/shorts/shorts-linho-2.jpg",
+      "img/shorts/shorts-linho-3.jpg"
+    ]
   }
 ]
