@@ -68,6 +68,9 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;heigh
 .nfotos{position:absolute;right:8px;bottom:8px;z-index:1;background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:2px 8px;border-radius:99px;letter-spacing:.06em}
 .ver{background:none;border:0;padding:0;color:var(--mute);font:400 12px var(--sans);text-decoration:underline;cursor:pointer;text-align:left;width:max-content}
 .info h3[data-open]{cursor:pointer}
+.off{position:absolute;top:10px;right:10px;z-index:1;background:var(--dk);color:var(--dkt);font:500 10px var(--sans);letter-spacing:.1em;padding:4px 8px}
+.offi{display:inline-block;background:var(--dk);color:var(--dkt);font-size:11px;letter-spacing:.08em;padding:2px 8px;margin-left:8px;vertical-align:middle}
+.ate{display:block;color:var(--mute);font-size:12px;margin-top:2px}
 .badge{position:absolute;top:10px;left:10px;z-index:1;font-size:9px;letter-spacing:.16em;background:var(--bg);color:var(--ink);padding:4px 8px;text-transform:uppercase}
 .info{padding-top:14px;display:flex;flex-direction:column;gap:4px}
 .info h3{font-size:20px}
@@ -259,6 +262,19 @@ function md(src){
   }).join('');
 }
 
+/* Preço efetivo: "preco" é o valor promocional e "precoAntigo" o valor normal.
+   Com "promoAte" (AAAA-MM-DD), a promoção vale até o fim desse dia; depois o site
+   passa a cobrar o precoAntigo, sem riscado nem selo. */
+const numero=v=>parseFloat(String(v).replace(',','.'));
+function precos(p){
+  const atual=numero(p.preco),antigo=numero(p.precoAntigo);
+  let fim=null;
+  if(p.promoAte){const s=String(p.promoAte);const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(s)?s+'T23:59:59':s);if(!isNaN(d))fim=d}
+  const venceu=fim&&Date.now()>fim.getTime();
+  if(antigo>atual&&venceu)return {preco:antigo,precoAntigo:0,desc:0,promoFim:''};
+  if(antigo>atual)return {preco:atual,precoAntigo:antigo,desc:Math.round((1-atual/antigo)*100),promoFim:fim?fim.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):''};
+  return {preco:atual,precoAntigo:0,desc:0,promoFim:''};
+}
 const normCores=c=>[].concat(c||[]).map(x=>typeof x==='string'?{nome:x,valor:x}:{nome:x.nome||x.valor||'',valor:x.valor||x.nome||'#999'}).filter(x=>x.nome);
 const falta=p=>{const f=[];if(p.tams.length&&!TAM[p.id])f.push('tamanho');if(p.cores.length&&!COR[p.id])f.push('cor');return f};
 
@@ -270,10 +286,13 @@ function foto(box,p){
   if(!p.foto)return;
   const i=new Image();i.alt=p.nome;i.loading='lazy';i.onerror=()=>i.remove();i.src=p.foto;box.append(i);
 }
-function preco(p){
+function preco(p,pop){
   const d=el('div','pr');
   if(p.precoAntigo)d.append(el('s',0,brl(p.precoAntigo)));
-  d.append(brl(p.preco));return d;
+  d.append(brl(p.preco));
+  if(pop&&p.desc)d.append(el('span','offi','-'+p.desc+'%'));
+  if(p.promoFim)d.append(el('small','ate','Promoção até '+p.promoFim));
+  return d;
 }
 
 /* Tamanhos e cores (usado no cartão e no popup) */
@@ -305,6 +324,7 @@ function card(p){
   if(p.imgs[0])foto(ph,{foto:p.imgs[0],nome:p.nome});
   ph.dataset.open=p.id;ph.tabIndex=0;ph.setAttribute('role','button');ph.setAttribute('aria-label','Ver detalhes de '+p.nome);
   if(badge(p))ph.append(el('span','badge',badge(p)));
+  if(p.desc)ph.append(el('span','off','-'+p.desc+'%'));
   if(p.imgs.length>1)ph.append(el('span','nfotos','▣ '+p.imgs.length));
   const info=el('div','info'),h=el('h3',0,p.nome);h.dataset.open=p.id;
   const ver=el('button','ver','Ver detalhes');ver.type='button';ver.dataset.open=p.id;
@@ -376,7 +396,7 @@ function abrir(id){
   const p=P.find(x=>x.id===id);if(!p)return;
   modalId=id;
   set('#md-cat',p.cats.join(' · '));set('#md-t',p.nome);
-  $('#md-pr').replaceChildren(...preco(p).childNodes);
+  $('#md-pr').replaceChildren(...preco(p,true).childNodes);
   const d=$('#md-d');d.innerHTML=p.descricao?md(p.descricao):'';d.hidden=!p.descricao;
   galModal();opcModal();
   document.documentElement.classList.add('trava');dlg.showModal();dlg.scrollTop=0;
@@ -475,7 +495,7 @@ addEventListener('scroll',()=>document.body.classList.toggle('scrolled',scrollY>
 (async()=>{
   try{
     let lista;[S,lista]=await Promise.all([json('data/site.json'),json('data/produtos.json')]);
-    P=lista.filter(p=>p.ativo!==false).map((p,i)=>({...p,id:i+1,cats:[].concat(p.categoria||[]),tams:p.tamanhos||[],cores:normCores(p.cores),imgs:p.fotos&&p.fotos.length?p.fotos:(p.foto?[p.foto]:[])}));
+    P=lista.filter(p=>p.ativo!==false).map((p,i)=>({...p,...precos(p),id:i+1,cats:[].concat(p.categoria||[]),tams:p.tamanhos||[],cores:normCores(p.cores),imgs:p.fotos&&p.fotos.length?p.fotos:(p.foto?[p.foto]:[])}));
     P.forEach(p=>{if(p.tams.length===1)TAM[p.id]=p.tams[0];if(p.cores.length===1)COR[p.id]=p.cores[0].nome});
     cart=loadCart();texto();carrossel();draw();
   }catch(e){

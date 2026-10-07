@@ -3,7 +3,7 @@
 Site estático (HTML + JS puros, sem build) que lê o conteúdo de dois arquivos JSON.
 Funciona na Vercel, no GitHub Pages ou em qualquer servidor que entregue arquivos.
 
-**Versão atual: 1.0.0** — veja o [Changelog](#changelog) no final.
+**Versão atual: 1.1.0** — veja o [Changelog](#changelog) no final.
 
 ---
 
@@ -76,20 +76,52 @@ O token fica salvo só no seu navegador. Não use em computador compartilhado.
 6. Clique em **Publicar**. Fotos e `produtos.json` vão em **um único commit**.
 
 **Editar peças publicadas** (*3. Peças publicadas*): altere nome, preço,
-estoque, visibilidade, fotos, cores e descrição (“Cores e descrição”) e clique
-em **Publicar alterações**. Estoque `0` mostra “Esgotado”.
+estoque, visibilidade, fotos e, em “Promoção, cores e descrição”, o preço antigo,
+o prazo, as cores e a descrição. Depois clique em **Publicar alterações**.
+Estoque `0` mostra “Esgotado”.
 
 **Cores**: use **+ cor**, escolha a cor no seletor e dê um nome (ex.: *Preto*).
 Se a peça tem cores, o cliente precisa escolher uma antes de adicionar ao carrinho.
 
-### 5. O popup de detalhes (no site)
+**Aba “Configuração do site”**: edita o `data/site.json` sem abrir o arquivo
+(nome da loja, WhatsApp, Instagram, horário, textos da abertura, do carrossel,
+da vitrine, da “Nova fase”, da lista de novidades e as **marcas**). O WhatsApp
+é validado (55 + DDD + número) e só os dígitos são salvos. Alterações de peças
+e de configuração podem ser publicadas juntas, no mesmo commit.
+
+### 5. Promoções: preço cortado, selo e prazo
+
+Duas peças de informação, nenhuma conta automática de “preço cheio”:
+
+- `preco` é **o preço que o cliente paga** (o promocional).
+- `precoAntigo` é **o preço normal**. Enquanto a promoção vale, aparece riscado
+  ao lado do preço e a foto ganha o selo automático de desconto (ex.: **-23%**).
+- `promoAte` (opcional, `AAAA-MM-DD`): a promoção vale **até o fim desse dia**.
+  Depois disso o site cobra o `precoAntigo`, sem riscado e sem selo, e você não
+  precisa publicar de novo. Sem `promoAte`, a promoção dura até você apagar o
+  `precoAntigo`.
+
+```json
+{ "nome": "Calça alfaiataria", "preco": 99.9, "precoAntigo": 129.9, "promoAte": "2026-10-31" }
+```
+
+Regras: o `precoAntigo` precisa ser **maior** que o `preco` (senão é ignorado) e
+o prazo só funciona junto com o `precoAntigo`. O painel avisa e bloqueia a
+publicação se algo estiver errado, e mostra uma dica como “Selo automático: -23%
+(de R$ 129,90 por R$ 99,90). Vale até 31/10/2026”.
+
+> O prazo é conferido **no navegador de quem visita**, com o relógio do aparelho.
+> O carrinho e a mensagem do WhatsApp usam o preço calculado ali; por isso,
+> confirme o valor ao fechar o pedido.
+
+### 6. O popup de detalhes (no site)
 
 Clicar na **foto** (ou em *Ver detalhes*) abre um popup com todas as fotos
 (setas, miniaturas, teclado ← → e deslizar no celular), preço, tamanhos, cores,
 a **descrição** e o botão de adicionar ao carrinho. Fecha com **×**, **Esc** ou
 clicando fora.
 
-### 6. Markdown básico (descrição)
+### 7. Markdown básico (descrição)
 
 | Você escreve                 | Resultado          |
 |------------------------------|--------------------|
@@ -102,7 +134,7 @@ clicando fora.
 HTML digitado é **exibido como texto**, nunca executado. O painel tem os botões
 **N**, **I** e **• Lista** e mostra uma pré-visualização.
 
-### 7. Editando os JSONs à mão
+### 8. Editando os JSONs à mão
 
 **`data/produtos.json`** — lista de peças:
 
@@ -111,6 +143,7 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
   "nome": "Blusa básica manga curta",
   "preco": 59.9,
   "precoAntigo": 79.9,
+  "promoAte": "2026-10-31",
   "categoria": "Blusas",
   "tamanhos": ["P", "M", "G"],
   "cores": [
@@ -132,18 +165,19 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | `estoque` | não | `0` = esgotado; `1` = “Última peça”; `2` = “Últimas unidades” |
 | `descricao` | não | Markdown básico (veja acima) |
 | `foto` / `fotos` | não | `fotos` é a lista completa (primeira = capa); `foto` sozinho continua válido |
-| `precoAntigo` | não | Mostra o preço anterior riscado |
+| `precoAntigo` | não | Preço normal; precisa ser maior que `preco`. Aparece riscado e gera o selo “-X%” (veja a seção 5) |
+| `promoAte` | não | `AAAA-MM-DD`. Até o fim desse dia vale a promoção; depois o site cobra o `precoAntigo` |
 | `selo` | não | Troca o texto do selo automático |
 | `fundo` | não | Cor de fundo enquanto não há foto (ex.: `#c8b49a`) |
 | `ativo` | não | `false` esconde a peça do site sem apagá-la |
 
 **`data/site.json`** — textos da página. Os principais campos: `nome`,
 `whatsapp` (com 55 + DDD, só números), `instagram`, `horario`, `aviso`,
-`msgPadrao` / `msgNovidades` (mensagens do WhatsApp), `hero`, `pecas`,
+`msgPadrao` / `msgNovidades` (mensagens do WhatsApp; também editáveis na aba “Configuração do site”), `hero`, `pecas`,
 `destaques.quantidade` (itens no carrossel), `novaFase`, `marcas`, `novidades`,
 `rodape`, `rodape2`.
 
-### 8. Problemas comuns
+### 9. Problemas comuns
 
 | Sintoma | Causa / solução |
 |---------|-----------------|
@@ -153,9 +187,11 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | Painel: `GitHub 404` | Repositório, branch ou “pasta do site” incorretos. |
 | Foto não aparece | Caminho em `foto`/`fotos` diferente do arquivo real (atenção a maiúsculas). |
 | Alterações não aparecem | Aguarde ~30 s o deploy e recarregue com Ctrl+F5. |
+| Preço cortado não aparece | `precoAntigo` menor ou igual ao `preco`, ou `promoAte` já passou. O painel avisa. |
+| Falha no GitHub Actions: “Get Pages site failed” | Há um workflow de GitHub Pages sem o Pages ativado. Na Vercel ele não é necessário: apague `.github/workflows/` ou ative Settings → Pages → Source: *GitHub Actions*. |
 | Carrinho “voltou” sozinho | É de propósito: o carrinho fica salvo no navegador (só peças ainda em estoque). |
 
-### 9. Segurança
+### 10. Segurança
 
 - O `admin/` é público na Vercel, mas **inútil sem o token**. Para escondê-lo,
   crie um `.vercelignore` com a linha `admin/` e use o painel só localmente.
@@ -164,9 +200,56 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 
 ---
 
+## Melhorias futuras
+
+Ideias ainda **não implementadas**, em ordem sugerida de prioridade.
+
+**Loja**
+- [ ] **Foto por cor**: ao escolher “Preto”, o popup mostra a foto da peça preta.
+- [ ] **Estoque por tamanho e cor** (hoje o estoque é um número único por peça).
+- [ ] **Quantidade no carrinho** (hoje é uma unidade por peça).
+- [ ] **Busca e ordenação** na vitrine (menor preço, novidades, só promoções).
+- [ ] **Link direto para cada peça** (`#peca-nome`) para compartilhar no WhatsApp/Instagram.
+- [ ] **SEO**: título e imagem de compartilhamento (Open Graph) por peça, `sitemap.xml`.
+- [ ] **Fotos em WebP/AVIF** com tamanhos responsivos (`srcset`).
+- [ ] **Cupom de desconto** e **cálculo de frete por CEP**.
+- [ ] **Pix / pagamento online** (hoje o fechamento é pelo WhatsApp).
+
+**Painel**
+- [ ] **Reordenar peças e fotos** arrastando.
+- [ ] **Mudar a categoria** de uma peça movendo a foto de pasta; renomear categorias.
+- [ ] **Duplicar peça**, **importar/exportar CSV**.
+- [ ] **Pré-visualização do site** dentro do painel antes de publicar.
+- [ ] **Histórico e desfazer** (listar commits do painel e restaurar uma versão).
+- [ ] **Login real** no `/admin/` (senha ou GitHub OAuth) em vez do token manual.
+- [ ] Editar também as seções “Atendimento” e “Etapas” do `site.json`.
+- [ ] **Agendar publicação** de coleções e promoções.
+
+**Qualidade**
+- [ ] Testes automatizados (carrinho, promoções, markdown) e checagem de JSON no deploy.
+- [ ] Modo offline / PWA e métricas de cliques no WhatsApp.
+
+---
+
 ## Changelog
 
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Mais recente primeiro.
+
+### [1.1.0] — 2026-10-06
+**Adicionado**
+- **Preço cortado** (`precoAntigo`) com **selo automático de desconto** (“-23%”) na
+  foto e no popup.
+- **Promoção com prazo** (`promoAte`): depois do fim do dia indicado o site volta a
+  cobrar o preço normal, sem nova publicação.
+- **Admin:** campos “Preço antigo” e “Promoção válida até” (peças novas e publicadas),
+  com dica ao vivo e bloqueio de valores inconsistentes.
+- **Admin:** aba **Configuração do site** para editar `data/site.json` (textos,
+  WhatsApp com validação, Instagram, horário, marcas) e publicar junto com as peças.
+- Seção **Melhorias futuras** e solução do erro “Get Pages site failed” no README.
+
+**Alterado**
+- O admin só reescreve `produtos.json` / `site.json` quando há mudança neles, e a
+  mensagem do commit descreve o que foi enviado.
 
 ### [1.0.0] — 2026-10-05
 **Adicionado**
@@ -226,3 +309,6 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Mais recente pri
 - Primeira versão do site, a partir do conteúdo do Instagram `@constita.mb` e
   do site original na Vercel: abertura “Últimas peças. Nova fase.”, vitrine,
   atendimento online, marcas CONSTita / CONSTita FIT e lista de novidades.
+  
+    ## Sobre
+  **Desenvolvido por Kevin (http://kevin.net.br)**
