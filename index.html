@@ -111,7 +111,8 @@ footer .logo{margin-bottom:12px;color:var(--ink);font-size:22px}
 .dh{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .dh h3{font-size:28px}
 .x{background:none;border:0;color:var(--ink);font-size:26px;cursor:pointer;line-height:1}
-.items{flex:1;overflow-y:auto;padding:8px 0}
+.dbody{flex:1;overflow-y:auto;min-height:0}
+.items{padding:8px 0}
 .it{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);align-items:center}
 .sw{width:52px;height:68px;flex:none;position:relative;overflow:hidden}
 .sw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -119,7 +120,19 @@ footer .logo{margin-bottom:12px;color:var(--ink);font-size:22px}
 .it b{font:400 18px var(--serif);display:block;line-height:1.2}
 .it small{color:var(--mute);font-size:12px}
 .rm{background:none;border:0;color:var(--mute);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:underline}
-.tot{display:flex;justify-content:space-between;padding:18px 0;font-size:16px}
+.tot{display:flex;justify-content:space-between;padding:12px 0 16px;font-size:16px}
+.dfoot{border-top:1px solid var(--line);padding-top:12px}
+.lin{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--mute);padding:2px 0}
+.bloco{padding:14px 0;border-top:1px solid var(--line)}
+.bloco label.t{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+.lin2{display:flex;gap:8px}
+.lin2 input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;border-radius:0}
+.lin2 .btn{padding:10px 16px}
+.msg{margin:6px 0 0;font-size:13px;color:var(--mute)}.msg.ok{color:var(--ink)}.msg.er{color:#c0504d}
+.msg button{background:none;border:0;padding:0 0 0 6px;color:var(--mute);font:inherit;text-decoration:underline;cursor:pointer}
+.opf{display:flex;gap:8px;align-items:flex-start;padding:8px 0;font-size:13px;cursor:pointer;line-height:1.4}
+.opf input{margin-top:3px}.opf small{display:block;color:var(--mute)}
+.mi .sku{font-size:12px;color:var(--mute);letter-spacing:.08em;margin:-6px 0 0}
 .drawer .btn{width:100%}
 .dempty{color:var(--mute);padding:30px 0}
 /* Popup de detalhes */
@@ -211,6 +224,7 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
     <div class="mi">
       <p class="cat" id="md-cat"></p>
       <h3 id="md-t"></h3>
+      <p class="sku" id="md-sku"></p>
       <div class="pr" id="md-pr"></div>
       <div class="md" id="md-d"></div>
       <div id="md-opc"></div>
@@ -221,9 +235,26 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 <div class="ov" id="ov"></div>
 <aside class="drawer" id="drawer" aria-label="Carrinho">
   <div class="dh"><h3>Seu carrinho</h3><button class="x" id="close" type="button" aria-label="Fechar">×</button></div>
-  <div class="items" id="items"></div>
-  <div class="tot"><span>Total</span><b id="total">R$ 0,00</b></div>
-  <a class="btn" id="checkout" target="_blank" rel="noopener">Finalizar pelo WhatsApp</a>
+  <div class="dbody">
+    <div class="items" id="items"></div>
+    <div class="bloco" id="b-cupom" hidden>
+      <label class="t" for="cupom-in">Cupom de desconto</label>
+      <div class="lin2"><input id="cupom-in" type="text" autocomplete="off" autocapitalize="characters" placeholder="Código do cupom"><button class="btn ghost" id="cupom-ok" type="button">Aplicar</button></div>
+      <p class="msg" id="cupom-msg" aria-live="polite"></p>
+    </div>
+    <div class="bloco" id="b-frete" hidden>
+      <label class="t" for="cep-in">Calcular frete</label>
+      <div class="lin2"><input id="cep-in" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="CEP (00000-000)"><button class="btn ghost" id="cep-ok" type="button">Calcular</button></div>
+      <div id="frete-res" aria-live="polite"></div>
+    </div>
+  </div>
+  <div class="dfoot">
+    <div class="lin"><span>Subtotal</span><span id="sub">R$ 0,00</span></div>
+    <div class="lin" id="l-desc" hidden><span id="desc-rot"></span><span id="desc-val"></span></div>
+    <div class="lin" id="l-frete" hidden><span id="frete-rot"></span><span id="frete-val"></span></div>
+    <div class="tot"><span>Total</span><b id="total">R$ 0,00</b></div>
+    <a class="btn" id="checkout" target="_blank" rel="noopener">Finalizar pelo WhatsApp</a>
+  </div>
 </aside>
 
 <script>
@@ -346,45 +377,176 @@ function renderTrack(){
   const t=$('#track'),x=t.scrollLeft;
   t.replaceChildren(...SEL.map(card));t.scrollLeft=x;
 }
+/* ---------- Carrinho, cupom e frete ---------- */
+const r2=v=>Math.round(v*100)/100;
+const soDig=s=>String(s||'').replace(/\D/g,'');
+const fmtCep=c=>c.length===8?c.slice(0,5)+'-'+c.slice(5):c;
+const cod=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'');
+const skuVar=(p,tam,cor)=>p.sku?[p.sku,tam&&cod(tam),cor&&cod(cor).slice(0,3)].filter(Boolean).join('-'):'';
+let CUPOM=null,FR={cep:'',info:null,opcao:'entrega',erro:''};
+const frete=()=>S.frete&&S.frete.ativo!==false?S.frete:null;
+const cupons=()=>(S.cupons||[]).filter(c=>c.ativo!==false&&c.codigo);
+/* Faixas de CEP: "88000-000 a 89999-999", um CEP "88300-000" ou um prefixo "883" */
+function faixa(t){
+  const d=(String(t).match(/\d{5}-?\d{3}|\d{2,7}/g)||[]).map(soDig);
+  if(!d.length)return null;
+  if(d.length===1)return d[0].length===8?[+d[0],+d[0]]:[+d[0].padEnd(8,'0'),+d[0].padEnd(8,'9')];
+  return [+d[0].padEnd(8,'0'),+d[1].padEnd(8,'9')];
+}
+const regraCep=cep=>((frete()||{}).regras||[]).find(r=>(r.cep||[]).some(t=>{const f=faixa(t);return f&&+cep>=f[0]&&+cep<=f[1]}))||null;
+
+function erroCupom(c,sub){
+  if(c.validoAte){const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(c.validoAte)?c.validoAte+'T23:59:59':c.validoAte);if(!isNaN(d)&&Date.now()>d.getTime())return 'Este cupom expirou.'}
+  if(c.minimo>0&&sub<c.minimo)return 'Pedido mínimo de '+brl(c.minimo)+' para este cupom.';
+  if(c.soSemPromo&&!cart.some(x=>!x.promo))return 'Este cupom vale só para peças sem promoção.';
+  return '';
+}
+function totais(){
+  const sub=r2(cart.reduce((a,x)=>a+x.preco,0));
+  let desc=0,gratisCupom=false,cerro='';
+  if(CUPOM){
+    cerro=erroCupom(CUPOM,sub);
+    if(!cerro){
+      const base=CUPOM.soSemPromo?cart.filter(x=>!x.promo).reduce((a,x)=>a+x.preco,0):sub;
+      if(CUPOM.tipo==='percentual')desc=r2(base*Math.min(100,CUPOM.valor)/100);
+      else if(CUPOM.tipo==='valor')desc=r2(Math.min(CUPOM.valor,base));
+      else if(CUPOM.tipo==='frete')gratisCupom=true;
+    }
+  }
+  const liq=r2(sub-desc),F=frete();let fr=null,frRot='',prazo='';
+  if(F&&cart.length){
+    if(FR.opcao==='retirada'&&F.retirada&&F.retirada.ativo){fr=0;frRot=F.retirada.texto||'Retirada na loja'}
+    else if(FR.info&&FR.info.regra){fr=valorFrete(FR.info.regra,liq,gratisCupom);frRot='Entrega — '+FR.info.regra.nome;prazo=FR.info.regra.prazo||''}
+  }
+  return {sub,desc,liq,fr,frRot,prazo,total:r2(liq+(fr||0)),cerro,gratisCupom};
+}
+function valorFrete(rg,liq,gratisCupom){
+  const F=frete(),lim=rg.gratisAcima>0?rg.gratisAcima:(F.gratisAcima||0);
+  return gratisCupom||(lim>0&&liq>=lim)?0:r2(rg.valor);
+}
+const det=x=>[x.tam&&'tam. '+x.tam,x.cor&&'cor '+x.cor].filter(Boolean).join(', ');
+function msgPedido(T){
+  let m='Olá! Gostaria de finalizar meu pedido:\n'+cart.map(x=>'• '+x.nome+(det(x)?' ('+det(x)+')':'')+(x.sku?' [SKU '+x.sku+']':'')+' — '+brl(x.preco)).join('\n');
+  m+='\nSubtotal: '+brl(T.sub);
+  if(T.desc>0)m+='\nCupom '+CUPOM.codigo+': -'+brl(T.desc);
+  if(CUPOM&&T.gratisCupom&&!T.cerro)m+='\nCupom '+CUPOM.codigo+': frete grátis';
+  if(T.fr!=null){
+    m+='\n'+T.frRot+(FR.cep&&T.frRot.startsWith('Entrega')?' — CEP '+fmtCep(FR.cep)+(FR.info&&FR.info.cidade?' ('+FR.info.cidade+'/'+FR.info.uf+')':''):'')+': '+(T.fr===0?'grátis':brl(T.fr))+(T.prazo?' ('+T.prazo+')':'');
+  }else if(frete())m+='\nEntrega: a combinar (CEP não informado)';
+  return m+'\nTotal: '+brl(T.total);
+}
+function renderCupomMsg(T){
+  const m=$('#cupom-msg');m.replaceChildren();m.className='msg';
+  if(FR.cupomErro){const e=el('div','msg er',FR.cupomErro);e.style.margin='0 0 4px';m.append(e)}
+  if(!CUPOM)return;
+  const l=el('div');
+  if(T.cerro){l.className='er';l.style.color='#c0504d';l.append(T.cerro+' ('+CUPOM.codigo+')')}
+  else{l.style.color='var(--ink)';l.append('✓ Cupom '+CUPOM.codigo+' aplicado'+(CUPOM.tipo==='frete'?' (frete grátis).':CUPOM.tipo==='percentual'?' (-'+CUPOM.valor+'%).':' (-'+brl(CUPOM.valor)+').'))}
+  const x=el('button',0,'remover');x.type='button';x.dataset.rmcupom='1';l.append(x);m.append(l);
+}
+function renderFrete(T){
+  const box=$('#frete-res');box.replaceChildren();
+  const F=frete();if(!F)return;
+  if(FR.erro){box.append(el('p','msg er',FR.erro));return}
+  if(!FR.cep||!FR.info)return;
+  const i=FR.info;
+  box.append(el('p','msg','CEP '+fmtCep(FR.cep)+(i.cidade?' · '+i.cidade+'/'+i.uf:'')));
+  const opt=(val,rot,sub)=>{
+    const l=el('label','opf'),r=el('input');r.type='radio';r.name='fr';r.value=val;r.checked=FR.opcao===val;r.dataset.fr=val;
+    const s=el('span');s.append(rot);if(sub)s.append(el('small',0,sub));l.append(r,s);box.append(l);
+  };
+  if(i.regra){const v=valorFrete(i.regra,T.liq,T.gratisCupom);opt('entrega','Entrega — '+i.regra.nome+' — '+(v===0?'Grátis':brl(v)),i.regra.prazo||'')}
+  if(F.retirada&&F.retirada.ativo)opt('retirada',(F.retirada.texto||'Retirar na loja')+' — Grátis','');
+  if(!i.regra&&!(F.retirada&&F.retirada.ativo))box.append(el('p','msg er','Não encontramos entrega para este CEP. Fale com a gente pelo WhatsApp.'));
+  else if(!i.regra)box.append(el('p','msg','Entrega não disponível para este CEP; use a retirada ou fale pelo WhatsApp.'));
+}
 function renderCart(){
-  const tot=cart.reduce((a,x)=>a+x.preco,0);
-  set('#cnt',cart.length);set('#total',brl(tot));saveCart();
-  const det=x=>[x.tam&&'tam. '+x.tam,x.cor&&'cor '+x.cor].filter(Boolean).join(', ');
+  const T=totais();
+  set('#cnt',cart.length);set('#total',brl(T.total));set('#sub',brl(T.sub));
   $('#items').replaceChildren(...(cart.length?cart.map(x=>{
     const it=el('div','it'),sw=el('div','sw');sw.style.background=x.bg;foto(sw,x);
     const d=el('div','d');d.append(el('b',0,x.nome),el('small',0,(det(x)?det(x)+' · ':'')+brl(x.preco)));
     const r=el('button','rm','Remover');r.type='button';r.dataset.rm=x.id;
     it.append(sw,d,r);return it;
   }):[el('p','dempty','Seu carrinho está vazio.')]));
-  const msg='Olá! Gostaria de finalizar meu pedido:\n'+cart.map(x=>'• '+x.nome+(det(x)?' ('+det(x)+')':'')+' — '+brl(x.preco)).join('\n')+'\nTotal: '+brl(tot);
-  $('#checkout').href=cart.length?zap(msg):'#';
+  $('#b-cupom').hidden=!(cupons().length&&cart.length);
+  $('#b-frete').hidden=!(frete()&&cart.length);
+  renderCupomMsg(T);renderFrete(T);
+  $('#l-desc').hidden=!(T.desc>0);
+  if(T.desc>0){set('#desc-rot','Cupom '+CUPOM.codigo);set('#desc-val','-'+brl(T.desc))}
+  $('#l-frete').hidden=T.fr==null;
+  if(T.fr!=null){set('#frete-rot',T.frRot);set('#frete-val',T.fr===0?'Grátis':brl(T.fr))}
+  $('#checkout').href=cart.length?zap(msgPedido(T)):'#';
   $('#checkout').style.opacity=cart.length?1:.4;
+  saveCart();
 }
+
+function aplicarCupom(){
+  const c=$('#cupom-in').value.trim().toUpperCase().replace(/\s+/g,'');
+  FR.cupomErro='';
+  if(!c){FR.cupomErro='Digite o código do cupom.';renderCart();return}
+  const f=cupons().find(x=>String(x.codigo).toUpperCase()===c);
+  if(!f){FR.cupomErro='Cupom inválido.';renderCart();return}
+  const e=erroCupom(f,r2(cart.reduce((a,x)=>a+x.preco,0)));
+  if(e){FR.cupomErro=e;renderCart();return}
+  CUPOM={...f,codigo:String(f.codigo).toUpperCase()};$('#cupom-in').value='';renderCart();
+}
+async function calcularCep(){
+  const cep=soDig($('#cep-in').value);
+  if(cep.length!==8){FR={cep:'',info:null,opcao:'entrega',erro:'Informe um CEP com 8 dígitos.'};renderCart();return}
+  $('#frete-res').replaceChildren(el('p','msg','Calculando…'));
+  let cidade='',uf='';
+  try{
+    const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),5000);
+    const r=await fetch('https://viacep.com.br/ws/'+cep+'/json/',{signal:ctl.signal});clearTimeout(t);
+    if(r.ok){const j=await r.json();if(j.erro){FR={cep:'',info:null,opcao:'entrega',erro:'CEP não encontrado.'};renderCart();return}cidade=j.localidade||'';uf=j.uf||''}
+  }catch(e){/* sem internet para o ViaCEP: segue só com as faixas de CEP */}
+  const regra=regraCep(cep),F=frete();
+  FR={cep,info:{cidade,uf,regra},opcao:regra?'entrega':(F.retirada&&F.retirada.ativo?'retirada':'entrega'),erro:'',cupomErro:''};
+  renderCart();
+}
+$('#cupom-ok').onclick=aplicarCupom;
+$('#cupom-in').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();aplicarCupom()}});
+$('#cep-ok').onclick=calcularCep;
+$('#cep-in').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();calcularCep()}});
+$('#cep-in').addEventListener('input',e=>{const d=soDig(e.target.value).slice(0,8);e.target.value=d.length>5?d.slice(0,5)+'-'+d.slice(5):d});
+$('#frete-res').addEventListener('change',e=>{if(e.target.dataset.fr){FR.opcao=e.target.dataset.fr;renderCart()}});
+
 function draw(){renderChips();renderGrid();renderTrack();renderCart();if(dlg.open)opcModal()}
 function toggle(o){$('#drawer').classList.toggle('open',o);$('#ov').classList.toggle('open',o)}
 
-/* Carrinho salvo no navegador (por nome da peça; só volta o que ainda está em estoque) */
+/* Carrinho, cupom e CEP salvos no navegador (só volta o que ainda existe e está em estoque) */
 const CK='constita-cart';
 function loadCart(){
   try{
-    const raw=JSON.parse(localStorage.getItem(CK)||'[]');if(!Array.isArray(raw))return [];
+    let raw=JSON.parse(localStorage.getItem(CK)||'[]');
+    const extra=Array.isArray(raw)?{}:raw;if(!Array.isArray(raw))raw=raw.itens||[];
+    if(!Array.isArray(raw))return [];
     const vistos=new Set();
-    return raw.map(r=>{
+    const itens=raw.map(r=>{
       const p=P.find(x=>x.nome===r.nome&&x.estoque>0);if(!p||vistos.has(p.id))return null;
       vistos.add(p.id);
       if(r.tam&&p.tams.includes(r.tam))TAM[p.id]=r.tam;
       if(r.cor&&p.cores.some(c=>c.nome===r.cor))COR[p.id]=r.cor;
-      return {id:p.id,nome:p.nome,preco:p.preco,tam:TAM[p.id]||'',cor:COR[p.id]||'',bg:p.fundo||FUNDO,foto:p.imgs[0]};
+      return {id:p.id,nome:p.nome,preco:p.preco,tam:TAM[p.id]||'',cor:COR[p.id]||'',bg:p.fundo||FUNDO,foto:p.imgs[0],sku:skuVar(p,TAM[p.id],COR[p.id]),promo:!!p.precoAntigo};
     }).filter(Boolean);
+    if(extra.cupom){const c=cupons().find(x=>String(x.codigo).toUpperCase()===extra.cupom);if(c)CUPOM={...c,codigo:String(c.codigo).toUpperCase()}}
+    if(extra.cep&&frete()){const regra=regraCep(extra.cep);FR={cep:extra.cep,info:{cidade:extra.cid||'',uf:extra.uf||'',regra},opcao:extra.opcao||'entrega',erro:''}}
+    return itens;
   }catch(e){try{localStorage.removeItem(CK)}catch(_){}return []}
 }
-function saveCart(){try{localStorage.setItem(CK,JSON.stringify(cart.map(x=>({nome:x.nome,tam:x.tam,cor:x.cor}))))}catch(e){}}
+function saveCart(){
+  try{localStorage.setItem(CK,JSON.stringify({
+    itens:cart.map(x=>({nome:x.nome,tam:x.tam,cor:x.cor})),
+    cupom:CUPOM?CUPOM.codigo:'',cep:FR.cep,cid:FR.info?FR.info.cidade:'',uf:FR.info?FR.info.uf:'',opcao:FR.opcao
+  }))}catch(e){}
+}
 
 function add(id){
   const p=P.find(x=>x.id===id);if(!p||!(p.estoque>0))return;
   if(cart.some(x=>x.id===id)){cart=cart.filter(x=>x.id!==id);draw();return}
   if(falta(p).length){need=id;draw();return}
-  cart.push({id,nome:p.nome,preco:p.preco,tam:TAM[id]||'',cor:COR[id]||'',bg:p.fundo||FUNDO,foto:p.imgs[0]});
+  cart.push({id,nome:p.nome,preco:p.preco,tam:TAM[id]||'',cor:COR[id]||'',bg:p.fundo||FUNDO,foto:p.imgs[0],sku:skuVar(p,TAM[id],COR[id]),promo:!!p.precoAntigo});
   need=0;
   if(dlg.open)dlg.close();
   draw();toggle(true);
@@ -419,6 +581,7 @@ function galModal(){
 }
 function opcModal(){
   const p=P.find(x=>x.id===modalId);if(!p)return;
+  set('#md-sku',p.sku?'SKU '+skuVar(p,TAM[p.id],COR[p.id]):'');
   const w=$('#md-opc');w.replaceChildren();w.style.display='grid';w.style.gap='12px';
   if(p.estoque>0&&(p.tams.length||p.cores.length))w.append(opcoes(p));
   w.append(botaoAdd(p));
@@ -473,7 +636,7 @@ function carrossel(){
 }
 
 document.addEventListener('click',e=>{
-  const c=e.target.closest('[data-c],[data-add],[data-tam],[data-cor],[data-rm],[data-open],[data-fechar],[data-nav],[data-th]');if(!c)return;
+  const c=e.target.closest('[data-c],[data-add],[data-tam],[data-cor],[data-rm],[data-rmcupom],[data-open],[data-fechar],[data-nav],[data-th]');if(!c)return;
   const d=c.dataset,id=+d.id;
   if(d.fechar!==undefined)dlg.close();
   else if(d.open)abrir(+d.open);
@@ -484,6 +647,7 @@ document.addEventListener('click',e=>{
   else if(d.tam){TAM[id]=d.tam;if(need===id&&!falta(P.find(x=>x.id===id)).length)need=0;draw()}
   else if(d.cor){COR[id]=d.cor;if(need===id&&!falta(P.find(x=>x.id===id)).length)need=0;draw()}
   else if(d.rm){cart=cart.filter(x=>x.id!==+d.rm);draw()}
+  else if(d.rmcupom){CUPOM=null;FR.cupomErro='';renderCart()}
 });
 document.addEventListener('keydown',e=>{
   if((e.key==='Enter'||e.key===' ')&&e.target.matches('.ph[data-open]')){e.preventDefault();abrir(+e.target.dataset.open)}
@@ -497,7 +661,7 @@ addEventListener('scroll',()=>document.body.classList.toggle('scrolled',scrollY>
     let lista;[S,lista]=await Promise.all([json('data/site.json'),json('data/produtos.json')]);
     P=lista.filter(p=>p.ativo!==false).map((p,i)=>({...p,...precos(p),id:i+1,cats:[].concat(p.categoria||[]),tams:p.tamanhos||[],cores:normCores(p.cores),imgs:p.fotos&&p.fotos.length?p.fotos:(p.foto?[p.foto]:[])}));
     P.forEach(p=>{if(p.tams.length===1)TAM[p.id]=p.tams[0];if(p.cores.length===1)COR[p.id]=p.cores[0].nome});
-    cart=loadCart();texto();carrossel();draw();
+    cart=loadCart();if(FR.cep)$('#cep-in').value=fmtCep(FR.cep);texto();carrossel();draw();
   }catch(e){
     console.error(e);
     erro(location.protocol==='file:'

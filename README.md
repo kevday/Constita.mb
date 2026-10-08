@@ -3,7 +3,7 @@
 Site estático (HTML + JS puros, sem build) que lê o conteúdo de dois arquivos JSON.
 Funciona na Vercel, no GitHub Pages ou em qualquer servidor que entregue arquivos.
 
-**Versão atual: 1.1.0** — veja o [Changelog](#changelog) no final.
+**Versão atual: 1.2.0** — veja o [Changelog](#changelog) no final.
 
 ---
 
@@ -13,17 +13,18 @@ Funciona na Vercel, no GitHub Pages ou em qualquer servidor que entregue arquivo
 
 ```
 constita-site/
-├── index.html            Site (vitrine, carrossel, popup de detalhes, carrinho)
-├── admin/index.html      Painel para cadastrar/editar peças e enviar ao GitHub
+├── index.html            Site (vitrine, carrossel, popup de detalhes, carrinho, cupom e frete)
+├── admin/index.html      Painel para cadastrar/editar peças e configurar o site
 ├── data/
-│   ├── site.json         Textos, WhatsApp, Instagram, marcas
+│   ├── site.json         Textos, WhatsApp, marcas, cupons e regras de frete
 │   └── produtos.json     Catálogo de peças
 ├── img/                  Logo (k.jpg) e fotos; fotos novas vão para img/<categoria>/
+├── ROADMAP.md            Planejamento (ideias e próximos passos)
 └── README.md
 ```
 
 Você **não precisa editar o HTML**: tudo que muda fica nos JSONs, e o painel
-`/admin/` edita o `produtos.json` por você.
+`/admin/` edita os dois arquivos por você.
 
 ### 2. Testar no seu computador
 
@@ -69,59 +70,155 @@ O token fica salvo só no seu navegador. Não use em computador compartilhado.
    máximo 1400 px).
 3. Marque **“Fotos soltas de uma vez = uma única peça”** para criar uma peça
    com várias fotos; desmarcado, cada foto vira uma peça.
-4. Em cada peça nova preencha nome, preço, tamanhos (`P, M, G`) e estoque.
-   Opcionais: **cores** e **descrição**.
+4. Em cada peça nova preencha nome, preço, tamanhos (`P, M, G`) e estoque. O
+   **SKU** é preenchido sozinho. Opcionais: promoção, **cores** e **descrição**.
 5. Mais fotos na mesma peça: quadro **+ foto**. A primeira é a *capa*; clique
    numa foto para torná-la a capa e no **×** para remover.
-6. Clique em **Publicar**. Fotos e `produtos.json` vão em **um único commit**.
+6. Clique em **Publicar**. Fotos e JSONs vão em **um único commit**.
 
 **Editar peças publicadas** (*3. Peças publicadas*): altere nome, preço,
-estoque, visibilidade, fotos e, em “Promoção, cores e descrição”, o preço antigo,
-o prazo, as cores e a descrição. Depois clique em **Publicar alterações**.
+estoque, SKU, visibilidade, fotos e, em “Promoção, cores e descrição”, o preço
+antigo, o prazo, as cores e a descrição. Depois clique em **Publicar alterações**.
 Estoque `0` mostra “Esgotado”.
 
-**Cores**: use **+ cor**, escolha a cor no seletor e dê um nome (ex.: *Preto*).
-Se a peça tem cores, o cliente precisa escolher uma antes de adicionar ao carrinho.
+**SKU (código da peça)**
 
-**Aba “Configuração do site”**: edita o `data/site.json` sem abrir o arquivo
-(nome da loja, WhatsApp, Instagram, horário, textos da abertura, do carrossel,
-da vitrine, da “Nova fase”, da lista de novidades e as **marcas**). O WhatsApp
-é validado (55 + DDD + número) e só os dígitos são salvos. Alterações de peças
-e de configuração podem ser publicadas juntas, no mesmo commit.
+- Gerado automaticamente no formato `CAT-NOM-NNN`: 3 letras da **categoria**,
+  3 letras da primeira palavra relevante do **nome** (ignora palavras que só
+  repetem a categoria) e um **número sequencial**. Ex.: *Blusa básica manga
+  curta* em *Blusas* → `BLU-BAS-001`.
+- É **editável**: use letras, números e hífen (o painel converte para maiúsculas).
+  Em peça nova, enquanto você não editar, o SKU acompanha mudanças de nome e
+  categoria; o botão **↻** gera de novo.
+- Precisa ser **único**: o painel bloqueia a publicação se houver SKU repetido.
+- Peças antigas sem SKU: botão **Gerar SKUs que faltam**.
+- No site, o popup mostra o SKU, e o **SKU da variação** vai para o carrinho e
+  para a mensagem do WhatsApp: SKU + tamanho + 3 letras da cor. Ex.:
+  `BLU-BAS-001-M-PRE` (tamanho M, cor Preto).
+
+**Duplicar peça**: o botão **Duplicar** (nas peças publicadas e nas novas) cria
+uma cópia em *Adicionar peças* com “(cópia)” no nome e **novo SKU**. A cópia
+reaproveita os mesmos arquivos de foto; troque ou acrescente fotos se quiser.
+Nada é publicado até você clicar em **Publicar**.
+
+**Importar / exportar CSV** (em *3. Peças publicadas*)
+
+- **Exportar CSV** baixa `produtos-AAAA-MM-DD.csv` (UTF-8, separador `;`), que
+  abre direto no Excel/LibreOffice. Inclui edições ainda não publicadas.
+- **Importar CSV** mostra uma **prévia** (novas, atualizadas, sem mudança, erros)
+  antes de aplicar. Depois de aplicar, clique em **Publicar**.
+- Cada linha é casada com uma peça existente pelo **SKU** e, se não houver SKU,
+  pelo **nome**; senão vira peça nova (precisa de `nome` e `preco`).
+- **Célula vazia = manter o valor atual** (não apaga nada). Para limpar um
+  campo, edite no painel.
+- O CSV **não envia fotos**: a coluna `fotos` só referencia arquivos que já
+  estão no repositório (ex.: `img/blusas/a.jpg|img/blusas/a-2.jpg`).
+
+| Coluna | Formato |
+|--------|---------|
+| `sku` | `BLU-BAS-001` (vazio em peça nova = gera sozinho) |
+| `nome`, `categoria` | texto; várias categorias separadas por `\|` |
+| `preco`, `preco_antigo` | `89,90` ou `R$ 1.299,90` |
+| `promo_ate` | `AAAA-MM-DD` ou `DD/MM/AAAA` |
+| `estoque` | número inteiro |
+| `tamanhos` | `P\|M\|G` (também aceita vírgula) |
+| `cores` | `Preto=#1c1814\|Off White=#f1eee7` (ou só o nome) |
+| `descricao` | Markdown básico (pode ter quebras de linha entre aspas) |
+| `fotos` | caminhos separados por `\|`; o primeiro é a capa |
+| `ativo` | `sim` / `não` |
+
+**Aba “Configuração do site”**: edita o `data/site.json` sem abrir o arquivo:
+nome da loja, WhatsApp (validado: 55 + DDD + número), Instagram, horário, textos
+da abertura, do carrossel, da vitrine, da “Nova fase”, da lista de novidades, as
+**marcas**, os **cupons** e o **frete por CEP**. Alterações de peças e de
+configuração podem ser publicadas juntas, no mesmo commit.
 
 ### 5. Promoções: preço cortado, selo e prazo
-
-Duas peças de informação, nenhuma conta automática de “preço cheio”:
 
 - `preco` é **o preço que o cliente paga** (o promocional).
 - `precoAntigo` é **o preço normal**. Enquanto a promoção vale, aparece riscado
   ao lado do preço e a foto ganha o selo automático de desconto (ex.: **-23%**).
 - `promoAte` (opcional, `AAAA-MM-DD`): a promoção vale **até o fim desse dia**.
-  Depois disso o site cobra o `precoAntigo`, sem riscado e sem selo, e você não
-  precisa publicar de novo. Sem `promoAte`, a promoção dura até você apagar o
-  `precoAntigo`.
+  Depois disso o site cobra o `precoAntigo`, sem riscado e sem selo, sem nova
+  publicação. Sem `promoAte`, dura até você apagar o `precoAntigo`.
 
 ```json
 { "nome": "Calça alfaiataria", "preco": 99.9, "precoAntigo": 129.9, "promoAte": "2026-10-31" }
 ```
 
-Regras: o `precoAntigo` precisa ser **maior** que o `preco` (senão é ignorado) e
-o prazo só funciona junto com o `precoAntigo`. O painel avisa e bloqueia a
-publicação se algo estiver errado, e mostra uma dica como “Selo automático: -23%
-(de R$ 129,90 por R$ 99,90). Vale até 31/10/2026”.
+O `precoAntigo` precisa ser **maior** que o `preco` e o prazo só funciona junto
+com ele; o painel avisa e bloqueia valores inconsistentes.
 
 > O prazo é conferido **no navegador de quem visita**, com o relógio do aparelho.
-> O carrinho e a mensagem do WhatsApp usam o preço calculado ali; por isso,
-> confirme o valor ao fechar o pedido.
+> Confirme o valor ao fechar o pedido pelo WhatsApp.
 
-### 6. O popup de detalhes (no site)
+### 6. Cupons de desconto
+
+Ficam em `site.json`, na lista `cupons` (ou na aba *Configuração do site*). O
+cliente digita o código no carrinho. **Um cupom por pedido.**
+
+```json
+{ "codigo": "BEMVINDA10", "descricao": "10% na primeira compra", "tipo": "percentual",
+  "valor": 10, "minimo": 0, "validoAte": "2026-12-31", "soSemPromo": true, "ativo": true }
+```
+
+| Campo | Descrição |
+|-------|-----------|
+| `codigo` | Texto sem espaços; maiúsculas/minúsculas não importam |
+| `tipo` | `percentual` (%), `valor` (R$ fixo) ou `frete` (frete grátis) |
+| `valor` | Quanto descontar (ignorado em `frete`) |
+| `minimo` | Pedido mínimo em R$ (0 = sem mínimo) |
+| `validoAte` | `AAAA-MM-DD`, vale até o fim do dia (vazio = sem prazo) |
+| `soSemPromo` | `true` = o desconto só incide em peças **sem** preço cortado |
+| `ativo` | `false` desliga sem apagar |
+| `descricao` | Anotação sua; não aparece no site |
+
+O desconto aparece no resumo do carrinho e na mensagem do WhatsApp. Se o
+carrinho mudar e o cupom deixar de valer (ex.: abaixo do mínimo), o site avisa.
+
+> Os cupons são validados **no navegador** e os códigos ficam no `site.json`,
+> que é público. Use para campanhas abertas; não para códigos secretos ou de uso
+> único. Confirme o pedido no WhatsApp.
+
+### 7. Frete por CEP
+
+Também em `site.json`, no bloco `frete`. É uma **tabela de valores fixos por
+faixa de CEP** (não uma cotação dos Correios). O cliente informa o CEP no
+carrinho; o site confirma cidade/UF pelo ViaCEP, escolhe a **primeira regra** que
+combina e mostra valor, prazo e a opção de **retirada na loja**.
+
+```json
+"frete": {
+  "ativo": true,
+  "gratisAcima": 400,
+  "retirada": { "ativo": true, "texto": "Retirar na loja (combinar pelo WhatsApp)" },
+  "regras": [
+    { "nome": "Santa Catarina", "cep": ["88000-000 a 89999-999"], "valor": 18.9, "prazo": "3 a 5 dias úteis" },
+    { "nome": "Demais regiões", "cep": ["40000-000 a 79999-999"], "valor": 44.9, "prazo": "7 a 12 dias úteis", "gratisAcima": 500 }
+  ]
+}
+```
+
+- **Faixas** (`cep`): `"88000-000 a 89999-999"`, um CEP exato (`"88301-000"`) ou
+  um prefixo (`"883"`). A ordem das regras importa.
+- **Frete grátis**: `gratisAcima` (geral ou por regra) considera o subtotal já
+  com o desconto do cupom; o cupom do tipo `frete` zera o frete.
+- CEP sem regra e sem retirada: o site orienta falar pelo WhatsApp.
+- Se o ViaCEP estiver fora do ar, o cálculo continua pelas faixas.
+- O frete escolhido entra no total e na mensagem do WhatsApp (“Entrega — Santa
+  Catarina — CEP 88301-000 (Itajaí/SC): R$ 18,90”).
+
+As regras de exemplo vêm com valores fictícios. **Ajuste valores, prazos e
+faixas** à sua realidade antes de publicar.
+
+### 8. O popup de detalhes (no site)
 
 Clicar na **foto** (ou em *Ver detalhes*) abre um popup com todas as fotos
-(setas, miniaturas, teclado ← → e deslizar no celular), preço, tamanhos, cores,
-a **descrição** e o botão de adicionar ao carrinho. Fecha com **×**, **Esc** ou
+(setas, miniaturas, teclado ← → e deslizar no celular), preço, SKU, tamanhos,
+cores, a **descrição** e o botão de compra. Fecha com **×**, **Esc** ou
 clicando fora.
 
-### 7. Markdown básico (descrição)
+### 9. Markdown básico (descrição)
 
 | Você escreve                 | Resultado          |
 |------------------------------|--------------------|
@@ -134,12 +231,13 @@ clicando fora.
 HTML digitado é **exibido como texto**, nunca executado. O painel tem os botões
 **N**, **I** e **• Lista** e mostra uma pré-visualização.
 
-### 8. Editando os JSONs à mão
+### 10. Editando os JSONs à mão
 
 **`data/produtos.json`** — lista de peças:
 
 ```json
 {
+  "sku": "BLU-BAS-001",
   "nome": "Blusa básica manga curta",
   "preco": 59.9,
   "precoAntigo": 79.9,
@@ -160,24 +258,25 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | Campo | Obrigatório | Descrição |
 |-------|:-----------:|-----------|
 | `nome`, `preco`, `categoria` | sim | `categoria` aceita texto ou lista (`["Feminino","Vestidos"]`) |
+| `sku` | não | Código único da peça (veja a seção 4) |
 | `tamanhos` | não | Se houver mais de um, o cliente escolhe; com um só, já vem selecionado |
 | `cores` | não | Lista de `{nome, valor}`; `valor` é qualquer cor CSS. Texto simples (`"Preto"`) também funciona |
 | `estoque` | não | `0` = esgotado; `1` = “Última peça”; `2` = “Últimas unidades” |
-| `descricao` | não | Markdown básico (veja acima) |
+| `descricao` | não | Markdown básico (veja a seção 9) |
 | `foto` / `fotos` | não | `fotos` é a lista completa (primeira = capa); `foto` sozinho continua válido |
-| `precoAntigo` | não | Preço normal; precisa ser maior que `preco`. Aparece riscado e gera o selo “-X%” (veja a seção 5) |
-| `promoAte` | não | `AAAA-MM-DD`. Até o fim desse dia vale a promoção; depois o site cobra o `precoAntigo` |
-| `selo` | não | Troca o texto do selo automático |
+| `precoAntigo`, `promoAte` | não | Promoção (veja a seção 5) |
+| `selo` | não | Troca o texto do selo automático de estoque |
 | `fundo` | não | Cor de fundo enquanto não há foto (ex.: `#c8b49a`) |
 | `ativo` | não | `false` esconde a peça do site sem apagá-la |
 
-**`data/site.json`** — textos da página. Os principais campos: `nome`,
-`whatsapp` (com 55 + DDD, só números), `instagram`, `horario`, `aviso`,
-`msgPadrao` / `msgNovidades` (mensagens do WhatsApp; também editáveis na aba “Configuração do site”), `hero`, `pecas`,
-`destaques.quantidade` (itens no carrossel), `novaFase`, `marcas`, `novidades`,
-`rodape`, `rodape2`.
+**`data/site.json`** — textos da página. Campos principais: `nome`, `whatsapp`
+(com 55 + DDD, só números), `instagram`, `horario`, `aviso`, `msgPadrao` /
+`msgNovidades` (mensagens do WhatsApp), `hero`, `pecas`, `destaques.quantidade`
+(itens no carrossel), `novaFase`, `marcas`, `novidades`, `rodape`, `rodape2`,
+`cupons` (seção 6) e `frete` (seção 7). Tudo também é editável na aba
+“Configuração do site”.
 
-### 9. Problemas comuns
+### 11. Problemas comuns
 
 | Sintoma | Causa / solução |
 |---------|-----------------|
@@ -185,55 +284,50 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | “tem erro de sintaxe JSON” | Falta vírgula, aspas ou colchete. Valide em jsonlint.com. |
 | Painel: `GitHub 401/403` | Token expirado ou sem *Contents: Read and write* neste repositório. |
 | Painel: `GitHub 404` | Repositório, branch ou “pasta do site” incorretos. |
+| Painel: “SKU repetido” | Dois itens com o mesmo SKU. Edite um deles ou use ↻. |
+| Painel: “Cupom repetido” / “faixa de CEP” | Códigos de cupom são únicos; faixas no formato `88000-000 a 89999-999`. |
+| CSV com acentos errados | Salve como **CSV UTF-8**. O arquivo exportado já vem nesse formato. |
+| Importação não alterou nada | Nenhuma linha casou por SKU/nome ou todas já estavam iguais (célula vazia mantém o valor). |
 | Foto não aparece | Caminho em `foto`/`fotos` diferente do arquivo real (atenção a maiúsculas). |
+| Preço cortado não aparece | `precoAntigo` menor ou igual ao `preco`, ou `promoAte` já passou. |
+| Cupom “inválido” / “mínimo” | Código digitado errado, cupom inativo/expirado ou subtotal abaixo do mínimo. |
+| Frete não calcula | CEP fora das faixas das regras e sem retirada ativa; confira `frete.regras`. |
 | Alterações não aparecem | Aguarde ~30 s o deploy e recarregue com Ctrl+F5. |
-| Preço cortado não aparece | `precoAntigo` menor ou igual ao `preco`, ou `promoAte` já passou. O painel avisa. |
 | Falha no GitHub Actions: “Get Pages site failed” | Há um workflow de GitHub Pages sem o Pages ativado. Na Vercel ele não é necessário: apague `.github/workflows/` ou ative Settings → Pages → Source: *GitHub Actions*. |
-| Carrinho “voltou” sozinho | É de propósito: o carrinho fica salvo no navegador (só peças ainda em estoque). |
+| Carrinho “voltou” sozinho | É de propósito: carrinho, cupom e CEP ficam salvos no navegador (só peças ainda em estoque). |
 
-### 10. Segurança
+### 12. Segurança
 
 - O `admin/` é público na Vercel, mas **inútil sem o token**. Para escondê-lo,
   crie um `.vercelignore` com a linha `admin/` e use o painel só localmente.
 - Revogue o token em *Settings → Developer settings* se perdê-lo.
 - A descrição é escapada antes de virar HTML; não há execução de scripts.
-
----
-
-## Melhorias futuras
-
-Ideias ainda **não implementadas**, em ordem sugerida de prioridade.
-
-**Loja**
-- [ ] **Foto por cor**: ao escolher “Preto”, o popup mostra a foto da peça preta.
-- [ ] **Estoque por tamanho e cor** (hoje o estoque é um número único por peça).
-- [ ] **Quantidade no carrinho** (hoje é uma unidade por peça).
-- [ ] **Busca e ordenação** na vitrine (menor preço, novidades, só promoções).
-- [ ] **Link direto para cada peça** (`#peca-nome`) para compartilhar no WhatsApp/Instagram.
-- [ ] **SEO**: título e imagem de compartilhamento (Open Graph) por peça, `sitemap.xml`.
-- [ ] **Fotos em WebP/AVIF** com tamanhos responsivos (`srcset`).
-- [ ] **Cupom de desconto** e **cálculo de frete por CEP**.
-- [ ] **Pix / pagamento online** (hoje o fechamento é pelo WhatsApp).
-
-**Painel**
-- [ ] **Reordenar peças e fotos** arrastando.
-- [ ] **Mudar a categoria** de uma peça movendo a foto de pasta; renomear categorias.
-- [ ] **Duplicar peça**, **importar/exportar CSV**.
-- [ ] **Pré-visualização do site** dentro do painel antes de publicar.
-- [ ] **Histórico e desfazer** (listar commits do painel e restaurar uma versão).
-- [ ] **Login real** no `/admin/` (senha ou GitHub OAuth) em vez do token manual.
-- [ ] Editar também as seções “Atendimento” e “Etapas” do `site.json`.
-- [ ] **Agendar publicação** de coleções e promoções.
-
-**Qualidade**
-- [ ] Testes automatizados (carrinho, promoções, markdown) e checagem de JSON no deploy.
-- [ ] Modo offline / PWA e métricas de cliques no WhatsApp.
+- Tudo que está em `data/` é público (inclusive os códigos de cupom).
 
 ---
 
 ## Changelog
 
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Mais recente primeiro.
+
+### [1.2.0] — 2026-10-08
+**Adicionado**
+- **SKU** por peça, gerado automaticamente (`CAT-NOM-NNN`), editável e único; SKU da
+  variação (tamanho e cor) no popup, no carrinho e na mensagem do WhatsApp; botão
+  “Gerar SKUs que faltam”.
+- **Cupom de desconto** (percentual, valor fixo ou frete grátis) com mínimo, validade,
+  “só em peças sem promoção” e ativação; editor na aba *Configuração do site*.
+- **Frete por CEP**: regras por faixa de CEP, prazo, frete grátis acima de um valor,
+  retirada na loja e confirmação de cidade/UF pelo ViaCEP; total do carrinho e
+  mensagem do WhatsApp com cupom e entrega.
+- **Duplicar peça** (publicada ou nova), com novo SKU.
+- **Importar / exportar CSV** com prévia, casamento por SKU ou nome e relatório de erros.
+- `ROADMAP.md` com o planejamento (que saiu do README).
+
+**Alterado**
+- Carrinho salvo no navegador agora guarda também cupom e CEP.
+- O carrinho lateral ganhou área rolável, com resumo (subtotal, desconto, frete, total).
+- Campo de CEP sem `maxlength`, que impedia substituir um CEP selecionado ao digitar.
 
 ### [1.1.0] — 2026-10-06
 **Adicionado**
@@ -245,7 +339,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Mais recente pri
   com dica ao vivo e bloqueio de valores inconsistentes.
 - **Admin:** aba **Configuração do site** para editar `data/site.json` (textos,
   WhatsApp com validação, Instagram, horário, marcas) e publicar junto com as peças.
-- Seção **Melhorias futuras** e solução do erro “Get Pages site failed” no README.
+- Lista de melhorias futuras e solução do erro “Get Pages site failed” no README (o planejamento hoje fica em `ROADMAP.md`).
 
 **Alterado**
 - O admin só reescreve `produtos.json` / `site.json` quando há mudança neles, e a
@@ -309,6 +403,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Mais recente pri
 - Primeira versão do site, a partir do conteúdo do Instagram `@constita.mb` e
   do site original na Vercel: abertura “Últimas peças. Nova fase.”, vitrine,
   atendimento online, marcas CONSTita / CONSTita FIT e lista de novidades.
-  
-    ## Sobre
-  **Desenvolvido por Kevin (http://kevin.net.br)**
+
+---
+
+<p align="center">Desenvolvido por <strong>Kevin</strong> — <a href="https://kevin.net.br">kevin.net.br</a></p>
