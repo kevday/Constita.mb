@@ -8,7 +8,8 @@
       "M"
     ],
     "estoque": 1,
-    "foto": "img/blusas/blusa-aurora.jpg"
+    "foto": "img/blusas/blusa-aurora.jpg",
+    "sku": "BLU-AUR-001"
   },
   {
     "nome": "Vestido Mídi Aurora",
@@ -20,7 +21,8 @@
       "G"
     ],
     "estoque": 5,
-    "foto": "img/vestidos/vestido-midi-aurora.jpg"
+    "foto": "img/vestidos/vestido-midi-aurora.jpg",
+    "sku": "VES-MID-001"
   },
   {
     "nome": "Colete Chek Linho",
@@ -30,7 +32,8 @@
       "P"
     ],
     "estoque": 1,
-    "foto": "img/colete/colete-chek-linho.jpg"
+    "foto": "img/colete/colete-chek-linho.jpg",
+    "sku": "COL-CHE-001"
   },
   {
     "nome": "Blusa Bata MyPlace",
@@ -41,7 +44,8 @@
       "G"
     ],
     "estoque": 1,
-    "foto": "img/blusas/blusa-bata-myplace.jpg"
+    "foto": "img/blusas/blusa-bata-myplace.jpg",
+    "sku": "BLU-BAT-001"
   },
   {
     "nome": "Blusa Manga Longa",
@@ -51,7 +55,8 @@
       "G"
     ],
     "estoque": 1,
-    "foto": "img/blusas/blusa-manga-longa.jpg"
+    "foto": "img/blusas/blusa-manga-longa.jpg",
+    "sku": "BLU-MAN-001"
   },
   {
     "nome": "Vestido Longo",
@@ -62,7 +67,8 @@
       "G"
     ],
     "estoque": 1,
-    "foto": "img/vestidos/vestido-longo.jpg"
+    "foto": "img/vestidos/vestido-longo.jpg",
+    "sku": "VES-LON-001"
   },
   {
     "nome": "Blusa Bata",
@@ -73,7 +79,8 @@
       "G"
     ],
     "estoque": 1,
-    "foto": "img/blusas/blusa-bata.jpg"
+    "foto": "img/blusas/blusa-bata.jpg",
+    "sku": "BLU-BAT-002"
   },
   {
     "nome": "Blazer Rose",
@@ -84,7 +91,8 @@
       "G"
     ],
     "estoque": 5,
-    "foto": "img/blazers/blazer-rose.jpg"
+    "foto": "img/blazers/blazer-rose.jpg",
+    "sku": "BLA-ROS-001"
   },
   {
     "nome": "Blusa Floral MyPlace",
@@ -95,7 +103,8 @@
       "M"
     ],
     "estoque": 3,
-    "foto": "img/blusas/blusa-floral-myplace.jpg"
+    "foto": "img/blusas/blusa-floral-myplace.jpg",
+    "sku": "BLU-FLO-001"
   },
   {
     "nome": "Blusa Via Tricot",
@@ -105,7 +114,8 @@
       "G"
     ],
     "estoque": 1,
-    "foto": "img/blusas/blusa-via-tricot.jpg"
+    "foto": "img/blusas/blusa-via-tricot.jpg",
+    "sku": "BLU-VIA-001"
   },
   {
     "nome": "Calça MyPlace",
@@ -115,7 +125,8 @@
       "G"
     ],
     "estoque": 1,
-    "foto": "img/calcas/calca-myplace.jpg"
+    "foto": "img/calcas/calca-myplace.jpg",
+    "sku": "CAL-MYP-001"
   },
   {
     "nome": "Blusa Regata Chek",
@@ -125,7 +136,8 @@
       "P"
     ],
     "estoque": 1,
-    "foto": "img/blusas/blusa-regata-chek.jpg"
+    "foto": "img/blusas/blusa-regata-chek.jpg",
+    "sku": "BLU-REG-001"
   },
   {
     "nome": "Calça Aladin",
@@ -135,7 +147,8 @@
       "G"
     ],
     "estoque": 1,
-    "foto": "img/calcas/calca-aladin.jpg"
+    "foto": "img/calcas/calca-aladin.jpg",
+    "sku": "CAL-ALA-001"
   },
   {
     "nome": "Vestido Midi",
@@ -145,7 +158,8 @@
       "M"
     ],
     "estoque": 1,
-    "foto": "img/vestidos/vestido-midi.jpg"
+    "foto": "img/vestidos/vestido-midi.jpg",
+    "sku": "VES-MID-002"
   },
   {
     "nome": "Calça Risca de Giz",
@@ -156,7 +170,8 @@
       "G"
     ],
     "estoque": 1,
-    "foto": "img/calcas/calca-risca-de-giz.jpg"
+    "foto": "img/calcas/calca-risca-de-giz.jpg",
+    "sku": "CAL-RIS-001"
   },
   {
     "nome": "Blazer Via Tricot",
@@ -166,7 +181,8 @@
       "P"
     ],
     "estoque": 3,
-    "foto": "img/blazers/blazer-via-tricot.jpg"
+    "foto": "img/blazers/blazer-via-tricot.jpg",
+    "sku": "BLA-VIA-001"
   },
   {
     "nome": "Calça Poá",
@@ -176,7 +192,8 @@
       "M"
     ],
     "estoque": 3,
-    "foto": "img/calcas/calca-poa.jpg"
+    "foto": "img/calcas/calca-poa.jpg",
+    "sku": "CAL-POA-001"
   },
   {
     "nome": "Blusa Tricot",
@@ -187,7 +204,8 @@
       "M"
     ],
     "estoque": 3,
-    "foto": "img/blusas/blusa-tricot.jpg"
+    "foto": "img/blusas/blusa-tricot.jpg",
+    "sku": "BLU-TRI-001"
   },
   {
     "nome": "Shorts linho",
@@ -221,6 +239,7 @@
       "img/shorts/shorts-linho-3.jpg"
     ],
     "precoAntigo": 329.9,
-    "promoAte": "2026-10-09"
+    "promoAte": "2026-10-09",
+    "sku": "SHO-LIN-001"
   }
 ]
