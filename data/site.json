@@ -81,8 +81,8 @@
   "rodape2": "Aqui você da seu próximo passo para o digital.",
   "cupons": [
     {
-      "codigo": "MAGALI10",
-      "descricao": "desconto Magali 10",
+      "codigo": "COMPRA10",
+      "descricao": "desconto compra 10",
       "tipo": "percentual",
       "valor": 10,
       "minimo": 250,
