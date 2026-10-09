@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CONSTITA — Últimas peças. Novos caminhos.</title>
+<title>Últimas peças. Novos caminhos.</title>
 <meta name="description" content="Últimas peças da coleção atual, com atendimento online pelo WhatsApp.">
-<meta property="og:title" content="CONSTITA — Últimas peças. Novos caminhos.">
+<meta property="og:title" content="Últimas peças. Novos caminhos.">
 <link rel="icon" href="img/k.jpg">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap">
 <style>
@@ -183,7 +183,7 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 <body>
 <div class="erro" id="erro" role="alert"></div>
 <header><div class="wrap">
-  <a class="logo" href="#topo"><img src="img/k.jpg" alt="" width="34" height="34"><span id="logo">CONSTITA</span></a>
+  <a class="logo" href="#topo"><img src="img/k.jpg" alt="" width="34" height="34"><span id="logo">Logo</span></a>
   <button class="cartbtn" id="open" type="button">Carrinho (<span id="cnt">0</span>)</button>
 </div></header>
 
@@ -565,7 +565,7 @@ function draw(){renderChips();renderGrid();renderTrack();renderCart();if(dlg.ope
 function toggle(o){$('#drawer').classList.toggle('open',o);$('#ov').classList.toggle('open',o)}
 
 /* Carrinho, cupom e CEP salvos no navegador (só volta o que ainda existe e está em estoque) */
-const CK='constita-cart';
+const CK='loja-cart';
 function loadCart(){
   try{
     let raw=JSON.parse(localStorage.getItem(CK)||'[]');
