@@ -13,7 +13,7 @@ Legenda: **A** = alta prioridade · **M** = média · **B** = baixa.
 - [ ] **A — Frete em tempo real** (Correios / Melhor Envio) por peso e dimensões, usando
   uma função serverless da Vercel para não expor o token. Hoje o frete usa valores fixos
   por faixa de CEP.
-- [ ] **M — Busca e ordenação** na vitrine (menor preço, novidades, só promoções).
+- [ ] **M — Filtros na vitrine** por tamanho, cor e faixa de preço; busca tolerante a erros de digitação.
 - [ ] **M — Link direto para cada peça** (`#peca-nome`) para compartilhar no WhatsApp e no Instagram.
 - [ ] **M — SEO:** título e imagem de compartilhamento (Open Graph) por peça, `sitemap.xml`.
 - [ ] **M — Pix / pagamento online** (hoje o fechamento é pelo WhatsApp).
@@ -25,7 +25,7 @@ Legenda: **A** = alta prioridade · **M** = média · **B** = baixa.
 ## Painel (`/admin/`)
 
 - [ ] **A — Edição em lote:** selecionar várias peças e ajustar preço (%), estoque, categoria ou promoção.
-- [ ] **A — Reordenar peças e fotos** arrastando.
+- [ ] **M — Reordenar em lote:** mover várias peças de uma vez e salvar “coleções” (grupos).
 - [ ] **A — Histórico e desfazer:** listar os commits do painel e restaurar uma versão.
 - [ ] **M — Mudar a categoria** de uma peça movendo as fotos de pasta; renomear categorias.
 - [ ] **M — Pré-visualização do site** dentro do painel antes de publicar.
@@ -35,6 +35,14 @@ Legenda: **A** = alta prioridade · **M** = média · **B** = baixa.
 - [ ] **B — Editar** também as seções “Atendimento” e “Etapas” do `site.json`.
 - [ ] **B — Agendar publicação** de coleções, promoções e cupons.
 - [ ] **B — Relatórios** simples (peças sem foto, sem estoque, sem SKU, promoções vencidas).
+
+## Escala e mídia
+
+- [ ] **A — Dividir o `produtos.json`** em páginas/índice quando passar de ~3.000 peças (hoje cada
+  peça pesa cerca de 0,5 KB; 1.000 peças ≈ 500 KB, que a Vercel entrega comprimido).
+- [ ] **M — Compressão de vídeo no navegador** (reencodar para 720p) antes de enviar.
+- [ ] **M — Hospedar vídeos fora do repositório** (Cloudinary, Bunny, YouTube) para coleções grandes.
+- [ ] **B — Texto alternativo e legenda** por foto (acessibilidade).
 
 ## Qualidade e infraestrutura
 

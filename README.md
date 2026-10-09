@@ -3,7 +3,7 @@
 Site estático (HTML + JS puros, sem build) que lê o conteúdo de dois arquivos JSON.
 Funciona na Vercel, no GitHub Pages ou em qualquer servidor que entregue arquivos.
 
-**Versão atual: 1.2.0** — veja o [Changelog](#changelog) no final.
+**Versão atual: 1.3.0** — veja o [Changelog](#changelog) no final.
 
 ---
 
@@ -72,14 +72,38 @@ O token fica salvo só no seu navegador. Não use em computador compartilhado.
    com várias fotos; desmarcado, cada foto vira uma peça.
 4. Em cada peça nova preencha nome, preço, tamanhos (`P, M, G`) e estoque. O
    **SKU** é preenchido sozinho. Opcionais: promoção, **cores** e **descrição**.
-5. Mais fotos na mesma peça: quadro **+ foto**. A primeira é a *capa*; clique
-   numa foto para torná-la a capa e no **×** para remover.
-6. Clique em **Publicar**. Fotos e JSONs vão em **um único commit**.
+5. Mais fotos (ou vídeos) na mesma peça: quadro **+ foto ou vídeo**. A primeira
+   mídia é a *capa*. Para **reordenar**, arraste as miniaturas ou use os botões
+   **‹ ›**; clicar numa miniatura a leva para a capa; **×** remove.
+6. Clique em **Publicar**. Fotos, vídeos e JSONs vão em **um único commit**.
 
-**Editar peças publicadas** (*3. Peças publicadas*): altere nome, preço,
-estoque, SKU, visibilidade, fotos e, em “Promoção, cores e descrição”, o preço
-antigo, o prazo, as cores e a descrição. Depois clique em **Publicar alterações**.
-Estoque `0` mostra “Esgotado”.
+**Vídeos curtos**
+
+- Aceita **MP4 (H.264)** e **WEBM**, até **25 MB** e **60 s** (ideal: 5–15 s, 720p, abaixo de 8 MB).
+  Arquivos maiores ou mais longos são recusados com o motivo.
+- O painel gera sozinho o **pôster** (primeiro quadro, em JPG). Arquivos:
+  `img/<categoria>/<nome>-video.mp4` e `img/<categoria>/<nome>-video.jpg`.
+- No site, o pôster aparece como capa/miniatura (com “▶”) e, no popup, o vídeo toca
+  com controles, sem som automático. Vídeo e fotos ficam na **mesma lista** e
+  podem ser reordenados juntos. Remover o vídeo apaga também o pôster.
+- Vídeo de iPhone (`.mov`/HEVC) pode não abrir em todos os navegadores: exporte
+  como **MP4 H.264**. Muitos vídeos pesados engordam o repositório; para uma
+  coleção grande, prefira vídeos curtos e leves.
+
+**Catálogo grande: lista, busca e ordem** (*3. Peças publicadas*)
+
+- A lista é **compacta** (30 por vez, com “Mostrar mais”): cada linha mostra
+  posição, miniatura, nome, SKU, categoria, preço, estoque e etiquetas
+  (*esgotada, promoção, oculta, sem foto, vídeo*). Clique em **Editar** para abrir
+  nome, preço, estoque, SKU, fotos, promoção, cores e descrição. Estoque `0` mostra “Esgotado”.
+- **Buscar** por nome, SKU ou categoria; filtrar por **categoria** e por
+  **situação** (sem SKU, sem foto, esgotadas, em promoção, ocultas no site).
+- **Reordenar peças** (a ordem do painel é a ordem da vitrine): arraste pelo **⠿**,
+  use **↑ ↓ ⤒**, ou digite a **posição** no campo numérico e tecle Enter. Com
+  filtro ativo, ↑ ↓ e o arrastar movem em relação às peças visíveis.
+- **“Colocar as peças novas no início da vitrine”** (marcado por padrão): peças
+  novas entram no topo; desmarque para irem ao fim.
+- Depois de qualquer mudança, clique em **Publicar alterações**.
 
 **SKU (código da peça)**
 
@@ -211,10 +235,17 @@ combina e mostra valor, prazo e a opção de **retirada na loja**.
 As regras de exemplo vêm com valores fictícios. **Ajuste valores, prazos e
 faixas** à sua realidade antes de publicar.
 
-### 8. O popup de detalhes (no site)
+### 8. A vitrine e o popup de detalhes (no site)
+
+**Vitrine para muitas peças**: a página mostra **24 peças por vez** e carrega mais
+ao rolar (ou no botão *Ver mais peças*). Acima da grade há **busca** (nome, SKU,
+categoria, cor, tamanho e descrição; ignora acentos e maiúsculas; todas as
+palavras precisam combinar), **ordenação** (ordem da loja, menor/maior preço,
+A–Z, maior desconto) e **Só promoções**; as abas de categoria continuam
+funcionando junto. Peças esgotadas ficam sempre por último.
 
 Clicar na **foto** (ou em *Ver detalhes*) abre um popup com todas as fotos
-(setas, miniaturas, teclado ← → e deslizar no celular), preço, SKU, tamanhos,
+(fotos e **vídeo curto**; setas, miniaturas, teclado ← → e deslizar no celular), preço, SKU, tamanhos,
 cores, a **descrição** e o botão de compra. Fecha com **×**, **Esc** ou
 clicando fora.
 
@@ -263,7 +294,7 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | `cores` | não | Lista de `{nome, valor}`; `valor` é qualquer cor CSS. Texto simples (`"Preto"`) também funciona |
 | `estoque` | não | `0` = esgotado; `1` = “Última peça”; `2` = “Últimas unidades” |
 | `descricao` | não | Markdown básico (veja a seção 9) |
-| `foto` / `fotos` | não | `fotos` é a lista completa (primeira = capa); `foto` sozinho continua válido |
+| `foto` / `fotos` | não | `fotos` é a lista completa (primeira = capa) e aceita **vídeos** (`.mp4`, `.webm`); o pôster é o mesmo caminho com `.jpg`. `foto` sozinho continua válido |
 | `precoAntigo`, `promoAte` | não | Promoção (veja a seção 5) |
 | `selo` | não | Troca o texto do selo automático de estoque |
 | `fundo` | não | Cor de fundo enquanto não há foto (ex.: `#c8b49a`) |
@@ -288,6 +319,9 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | Painel: “Cupom repetido” / “faixa de CEP” | Códigos de cupom são únicos; faixas no formato `88000-000 a 89999-999`. |
 | CSV com acentos errados | Salve como **CSV UTF-8**. O arquivo exportado já vem nesse formato. |
 | Importação não alterou nada | Nenhuma linha casou por SKU/nome ou todas já estavam iguais (célula vazia mantém o valor). |
+| Vídeo recusado no painel | Acima de 25 MB ou 60 s, ou formato/codec não suportado: exporte como MP4 (H.264) ou WEBM. |
+| Peça não aparece na busca do site | A busca exige que **todas** as palavras combinem (nome, SKU, categoria, cor, tamanho, descrição). |
+| Ordem das peças não mudou no site | Publique depois de reordenar; “Ordem da loja” é a ordem do painel (esgotadas vão ao fim). |
 | Foto não aparece | Caminho em `foto`/`fotos` diferente do arquivo real (atenção a maiúsculas). |
 | Preço cortado não aparece | `precoAntigo` menor ou igual ao `preco`, ou `promoAte` já passou. |
 | Cupom “inválido” / “mínimo” | Código digitado errado, cupom inativo/expirado ou subtotal abaixo do mínimo. |
@@ -309,6 +343,23 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 ## Changelog
 
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Mais recente primeiro.
+
+### [1.3.0] — 2026-10-09
+**Adicionado**
+- **Busca na vitrine** (nome, SKU, categoria, cor, tamanho, descrição), **ordenação**,
+  filtro **Só promoções** e **paginação** (24 por vez, com carregamento ao rolar);
+  testado com 1.200 peças.
+- **Vídeos curtos** por peça (MP4/WEBM, até 25 MB e 60 s) com pôster gerado automaticamente,
+  tocando no popup e identificados por “▶” nas miniaturas.
+- **Admin em escala:** lista compacta com paginação, **busca** e filtros (categoria, sem SKU,
+  sem foto, esgotadas, em promoção, ocultas) e edição sob demanda por linha.
+- **Reordenar peças** (arrastar, ↑ ↓ ⤒ ou número da posição) e **reordenar fotos/vídeos**
+  (arrastar ou ‹ ›); opção de colocar peças novas no início da vitrine.
+
+**Corrigido**
+- Campos de **cupom** e **CEP** ficavam minúsculos no celular (o botão ocupava a largura toda);
+  agora têm altura de toque e fonte de 16 px, e empilham em telas muito estreitas.
+- Preço no carrinho não quebra mais em duas linhas.
 
 ### [1.2.0] — 2026-10-08
 **Adicionado**
