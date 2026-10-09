@@ -1,5 +1,27 @@
 [
   {
+    "sku": "BLU-FLO-002",
+    "nome": "Blusa Floral MyPlace (cópia)",
+    "preco": 99.9,
+    "categoria": "Blusas",
+    "tamanhos": [
+      "P",
+      "M"
+    ],
+    "cores": [
+      {
+        "nome": "Azul",
+        "valor": "#130c6a"
+      },
+      {
+        "nome": "Off-White",
+        "valor": "#ffefe0"
+      }
+    ],
+    "estoque": 3,
+    "foto": "img/blusas/blusa-floral-myplace.jpg"
+  },
+  {
     "nome": "Blusa Aurora",
     "preco": 99.9,
     "categoria": "Blusas",
@@ -104,7 +126,17 @@
     ],
     "estoque": 3,
     "foto": "img/blusas/blusa-floral-myplace.jpg",
-    "sku": "BLU-FLO-001"
+    "sku": "BLU-FLO-001",
+    "cores": [
+      {
+        "nome": "#130c6a",
+        "valor": "#130c6a"
+      },
+      {
+        "nome": "#ffefe0",
+        "valor": "#ffefe0"
+      }
+    ]
   },
   {
     "nome": "Blusa Via Tricot",
