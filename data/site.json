@@ -1,9 +1,9 @@
 {
-  "nome": "CONSTITA",
-  "whatsapp": "5547999512616",
-  "instagram": "constita.mb",
+  "nome": "Kevin",
+  "whatsapp": "5547996333331",
+  "instagram": "kevin.net.br",
   "horario": "Atendimento de segunda a sábado, 9h às 19h",
-  "msgPadrao": "Olá! Vim pelo site da CONSTITA.",
+  "msgPadrao": "Olá! Vim pelo site do Kevin",
   "msgNovidades": "Olá tudo bem?, gostaria de receber as promoções da loja! 😀",
   "aviso": "Agora 100% online, com atendimento pelo WhatsApp.",
   "hero": {
@@ -36,7 +36,7 @@
   },
   "marcas": [
     {
-      "nome": "CONSTITA",
+      "nome": "Kevin",
       "subtitulo": "Moda básica • Essencial • Atemporal",
       "texto": "Peças que combinam entre si, atravessam tendências e fazem parte da vida real.",
       "tags": [
@@ -45,18 +45,6 @@
         "Conforto",
         "Versatilidade",
         "Atemporal"
-      ]
-    },
-    {
-      "nome": "CONSTITA + FIT",
-      "subtitulo": "Movimento • Conforto • Performance",
-      "texto": "Uma nova linha pensada para acompanhar o corpo em movimento, do treino à rotina.",
-      "tags": [
-        "Fitness",
-        "Funcionalidade",
-        "Qualidade",
-        "Minimalista",
-        "Academia e lifestyle"
       ]
     }
   ],
@@ -89,6 +77,44 @@
     "botao": "Quero fazer parte",
     "ok": "Obrigada! Seu cadastro segue pelo WhatsApp — é só enviar a mensagem."
   },
-  "rodape": "A loja não está acabando. Ela está mudando.",
-  "rodape2": "Uma fase termina. Uma nova começa."
+  "rodape": "Loja de demonstração.",
+  "rodape2": "Aqui você da seu próximo passo para o digital.",
+  "cupons": [
+    {
+      "codigo": "MAGALI10",
+      "descricao": "desconto Magali 10",
+      "tipo": "percentual",
+      "valor": 10,
+      "minimo": 250,
+      "validoAte": "2026-10-24",
+      "soSemPromo": true,
+      "ativo": true
+    }
+  ],
+  "frete": {
+    "ativo": true,
+    "gratisAcima": 0,
+    "retirada": {
+      "ativo": true,
+      "texto": "Retirar na loja (combinar pelo WhatsApp)"
+    },
+    "regras": [
+      {
+        "nome": "Santa Catarina",
+        "cep": [
+          "88330-000 a 88330-999"
+        ],
+        "valor": 29.9,
+        "prazo": "4 a 8 dias úteis"
+      },
+      {
+        "nome": "Demais regiões",
+        "cep": [
+          "40000-000 a 79999-999"
+        ],
+        "valor": 54.9,
+        "prazo": "7 a 12 dias úteis"
+      }
+    ]
+  }
 }
