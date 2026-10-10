@@ -3,7 +3,7 @@
 Site estático (HTML + JS puros, sem build) que lê o conteúdo de dois arquivos JSON.
 Funciona na Vercel, no GitHub Pages ou em qualquer servidor que entregue arquivos.
 
-**Versão atual: 1.3.0** — veja o [Changelog](#changelog) no final.
+**Versão atual: 1.4.0** — veja o [Changelog](#changelog) no final.
 
 ---
 
@@ -14,12 +14,15 @@ Funciona na Vercel, no GitHub Pages ou em qualquer servidor que entregue arquivo
 ```
 constita-site/
 ├── index.html            Site (vitrine, carrossel, popup de detalhes, carrinho, cupom e frete)
+├── tema.js               Motor de temas (gera o CSS a partir do bloco "tema")
 ├── admin/index.html      Painel para cadastrar/editar peças e configurar o site
+├── admin/temas.html      Editor visual de temas: cores, fontes, forma e layout
 ├── data/
 │   ├── site.json         Textos, WhatsApp, marcas, cupons e regras de frete
 │   └── produtos.json     Catálogo de peças
 ├── img/                  Logo (k.jpg) e fotos; fotos novas vão para img/<categoria>/
 ├── ROADMAP.md            Planejamento (ideias e próximos passos)
+├── ARQUITETURA.md        Proposta de plataforma multiloja (temas, pagamentos, dados)
 └── README.md
 ```
 
@@ -150,6 +153,31 @@ Nada é publicado até você clicar em **Publicar**.
 | `descricao` | Markdown básico (pode ter quebras de linha entre aspas) |
 | `fotos` | caminhos separados por `\|`; o primeiro é a capa |
 | `ativo` | `sim` / `não` |
+
+**Aparência e temas** (`/admin/temas.html`, ou o botão *Aparência e temas* no painel)
+
+- **8 estilos prontos** como ponto de partida — *Atelier* (o visual atual), *Mono*, *Rosé*,
+  *Urbano*, *Natural*, *Noir*, *Vibrante* e *Fresh* — inspirados em estilos comuns de lojas
+  de moda online. São composições próprias (cores, fontes e disposição); não copiam nenhum
+  modelo específico.
+- **Cores:** 9 cores (fundo, texto, destaque, botões…). Escolha 3 e use **Gerar paleta** para
+  calcular o resto. O verificador de **contraste (WCAG AA)** avisa quando o texto fica ilegível
+  e o botão **Corrigir contraste** ajusta sozinho.
+- **Modo escuro:** seguir o aparelho, sempre claro ou sempre escuro; as cores escuras são
+  calculadas automaticamente ou personalizadas.
+- **Fontes:** 21 famílias do Google Fonts (com e sem serifa) para títulos e texto, mais peso,
+  MAIÚSCULAS, espaço entre letras e tamanho base.
+- **Forma e layout:** arredondamento dos cantos, botões (quadrado, arredondado, pílula),
+  cabeçalho (fixo à esquerda, centralizado, que rola), abertura (centro ou esquerda), cartões
+  (limpo, moldura, sombra), proporção das fotos, colunas no celular e no computador, e
+  espaçamento entre seções.
+- **Prévia ao vivo** com o seu catálogo real (celular, tablet, computador; claro ou escuro).
+- **Salvar:** **Publicar tema** grava o bloco `tema` em `data/site.json` (usa a conexão feita no
+  painel e preserva o resto do arquivo); também dá para **copiar/baixar o JSON** ou importar um.
+  Um rascunho é guardado automaticamente neste navegador.
+
+> As fontes vêm do Google Fonts e são baixadas pelo navegador do visitante. A visão de
+> hospedar as fontes você mesmo está no `ARQUITETURA.md`.
 
 **Aba “Configuração do site”**: edita o `data/site.json` sem abrir o arquivo:
 nome da loja, WhatsApp (validado: 55 + DDD + número), Instagram, horário, textos
@@ -300,6 +328,36 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | `fundo` | não | Cor de fundo enquanto não há foto (ex.: `#c8b49a`) |
 | `ativo` | não | `false` esconde a peça do site sem apagá-la |
 
+**`tema`** (dentro do `site.json`) — gerado pelo editor de temas; sem esse bloco a loja usa o visual padrão:
+
+```json
+"tema": {
+  "preset": "rose",
+  "cores": { "fundo": "#fdf6f4", "cartao": "#f8e9e6", "texto": "#3a2430", "suave": "#7a5866",
+             "linha": "#efd8d4", "destaque": "#b0446a", "destaqueTexto": "#ffffff",
+             "botao": "#3a2430", "botaoTexto": "#fdf6f4" },
+  "escuro": { "modo": "auto" },
+  "fontes": { "titulo": "Playfair Display", "texto": "Lato", "pesoTitulo": 500,
+              "caixaTitulo": "normal", "espacoTitulo": 0, "tamanhoBase": 15 },
+  "forma":  { "raio": 14, "botao": "pilula" },
+  "layout": { "cabecalho": "centro", "abertura": "centro", "cartao": "sombra", "proporcao": "4/5",
+              "colunasMobile": 2, "colunasDesktop": 4, "densidade": "confortavel" }
+}
+```
+
+| Campo | Valores |
+|-------|---------|
+| `escuro.modo` | `auto` (segue o aparelho), `nunca` (sempre claro), `sempre` (sempre escuro); `escuro.cores` é opcional (se faltar, é calculado) |
+| `fontes.titulo` / `texto` | Uma das 21 famílias do editor (ex.: `Inter`, `Playfair Display`) |
+| `fontes.pesoTitulo` | `0` (padrão do site), `300`–`700` conforme a fonte |
+| `fontes.caixaTitulo` | `normal` ou `maiusculas` |
+| `forma.botao` | `quadrado`, `arredondado`, `pilula` |
+| `layout.cabecalho` | `fixo`, `centro` (logo centralizado em telas largas), `estatico` |
+| `layout.cartao` | `limpo`, `moldura`, `sombra` |
+| `layout.proporcao` | `3/4`, `4/5`, `2/3`, `1/1` |
+| `layout.colunasMobile` / `colunasDesktop` | `1`–`2` / `3`–`5` |
+| `layout.densidade` | `compacta`, `confortavel`, `espacosa` |
+
 **`data/site.json`** — textos da página. Campos principais: `nome`, `whatsapp`
 (com 55 + DDD, só números), `instagram`, `horario`, `aviso`, `msgPadrao` /
 `msgNovidades` (mensagens do WhatsApp), `hero`, `pecas`, `destaques.quantidade`
@@ -322,6 +380,10 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | Vídeo recusado no painel | Acima de 25 MB ou 60 s, ou formato/codec não suportado: exporte como MP4 (H.264) ou WEBM. |
 | Peça não aparece na busca do site | A busca exige que **todas** as palavras combinem (nome, SKU, categoria, cor, tamanho, descrição). |
 | Ordem das peças não mudou no site | Publique depois de reordenar; “Ordem da loja” é a ordem do painel (esgotadas vão ao fim). |
+| Prévia do editor de temas em branco | Abra o editor por um servidor (não por duplo clique) e confirme que `../index.html` carrega. |
+| Fonte do tema não aparece | Sem internet para o Google Fonts, ou nome da família digitado à mão que não esteja na lista do editor. |
+| Texto difícil de ler no tema | Use *Corrigir contraste automaticamente* no editor (meta: 4,5:1 ou mais). |
+| Tema publicado não muda o site | Aguarde o deploy (~30 s) e recarregue com Ctrl+F5; o navegador guarda o último tema em cache e atualiza na visita seguinte. |
 | Foto não aparece | Caminho em `foto`/`fotos` diferente do arquivo real (atenção a maiúsculas). |
 | Preço cortado não aparece | `precoAntigo` menor ou igual ao `preco`, ou `promoAte` já passou. |
 | Cupom “inválido” / “mínimo” | Código digitado errado, cupom inativo/expirado ou subtotal abaixo do mínimo. |
@@ -343,6 +405,21 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 ## Changelog
 
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Mais recente primeiro.
+
+### [1.4.0] — 2026-10-10
+**Adicionado**
+- **Editor visual de temas** (`admin/temas.html`) com 8 estilos prontos, 9 cores com gerador de paleta e
+  verificador de contraste (WCAG AA), modo escuro (automático ou personalizado), 21 famílias de fontes,
+  forma (cantos e botões) e layout (cabeçalho, abertura, cartões, proporção das fotos, colunas, espaçamento).
+- **Prévia ao vivo** com o catálogo real (celular, tablet, computador; claro ou escuro).
+- **Publicar tema** direto no `site.json` pelo GitHub, exportar/importar JSON e rascunho automático.
+- `tema.js`: motor de temas compartilhado pela vitrine e pelo editor.
+- Bloco `tema` no `site.json` (opcional) e atalho *Aparência e temas* no painel.
+
+**Alterado**
+- A vitrine passou a usar variáveis de tema para cores, fontes, cantos, colunas, proporção das fotos e
+  espaçamento; selos de desconto e o botão do WhatsApp usam a cor de **destaque** do tema.
+- O último tema fica em cache no navegador para evitar “piscar” cores na visita seguinte.
 
 ### [1.3.0] — 2026-10-09
 **Adicionado**

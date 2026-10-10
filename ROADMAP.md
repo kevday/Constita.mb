@@ -1,6 +1,6 @@
 # Planejamento — CONSTITA
 
-Ideias e próximos passos **ainda não implementados**. O que já foi feito está no
+Ideias e próximos passos **ainda não implementados**. A visão de plataforma multiloja está em [ARQUITETURA.md](ARQUITETURA.md). O que já foi feito está no
 [Changelog](README.md#changelog) do `README.md`.
 
 Legenda: **A** = alta prioridade · **M** = média · **B** = baixa.
@@ -21,6 +21,14 @@ Legenda: **A** = alta prioridade · **M** = média · **B** = baixa.
   um servidor; hoje os cupons são validados no navegador e os códigos ficam visíveis no `site.json`.
 - [ ] **B — Fotos em WebP/AVIF** com tamanhos responsivos (`srcset`).
 - [ ] **B — Lista de desejos** e **avaliações** de clientes.
+
+## Temas
+
+- [ ] **M — Extrair a paleta do logo ou de uma foto** automaticamente para sugerir cores.
+- [ ] **M — Mais estilos prontos** (por nicho: joias, calçados, infantil, fitness) e galeria de temas da comunidade.
+- [ ] **B — Hospedar as fontes** em WOFF2 próprio (mais rápido e sem requisição ao Google).
+- [ ] **B — Temas agendados** (Natal, Black Friday) com data de início e fim.
+- [ ] **B — Editor visual de seções** (ordem e visibilidade de abertura, carrossel, marcas e novidades).
 
 ## Painel (`/admin/`)
 

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Temas — CONSTITA</title>
+<style>
+:root{--bg:#faf8f4;--ink:#1c1814;--mute:#6f655b;--line:#e6dfd4;--card:#f3eee6;--dk:#1c1814;--dkt:#faf8f4;--ok:#2f6b46;--err:#a33a3a;--sans:system-ui,-apple-system,'Segoe UI',sans-serif;--serif:Georgia,'Times New Roman',serif}
+@media(prefers-color-scheme:dark){:root{--bg:#161311;--ink:#f1ebe1;--mute:#a89d90;--line:#332d27;--card:#1e1a17;--dk:#f1ebe1;--dkt:#161311;--ok:#7fc79b;--err:#e08a8a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans)}
+h1,h2{font-family:var(--serif);font-weight:400;margin:0}
+h1{font-size:26px}h2{font-size:19px}
+a{color:inherit}
+header.top{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:10}
+.btn{padding:9px 16px;border:1px solid var(--dk);background:var(--dk);color:var(--dkt);font:600 12px var(--sans);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--ink)}.btn.sm{padding:6px 11px;font-size:11px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.acoes{display:flex;gap:8px;flex-wrap:wrap}
+#status{padding:8px 20px;font-size:13px;color:var(--mute);min-height:2.2em}
+#status.ok{color:var(--ok)}#status.err{color:var(--err)}
+.layout{display:grid;gap:18px;padding:0 20px 40px}
+@media(min-width:960px){.layout{grid-template-columns:400px 1fr;align-items:start}#area-prev{position:sticky;top:76px}}
+details{border:1px solid var(--line);background:var(--card);margin-bottom:10px}
+summary{cursor:pointer;padding:12px 14px;font:400 18px var(--serif)}
+.sec{padding:4px 14px 14px;display:grid;gap:10px}
+label{display:block;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--mute);margin-bottom:3px}
+select,input[type=text],textarea{width:100%;padding:9px 10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;border-radius:0}
+textarea{font:12px ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+input[type=range]{width:100%}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cor{display:grid;grid-template-columns:42px 1fr;gap:8px;align-items:end}
+.cor input[type=color]{width:42px;height:38px;padding:2px;border:1px solid var(--line);background:var(--bg);cursor:pointer}
+.presets{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.preset{border:2px solid var(--line);padding:10px;text-align:left;cursor:pointer;color:inherit;font:inherit}
+.preset[aria-pressed=true]{border-color:var(--ink)}
+.preset b{display:block;font:500 17px var(--serif);line-height:1.2}
+.preset small{display:block;font-size:11px;line-height:1.35;margin-top:3px;opacity:.8}
+.sw{display:flex;gap:4px;margin-top:7px}.sw i{width:16px;height:16px;border:1px solid rgba(0,0,0,.18);border-radius:50%}
+.ctr{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;font-size:13px}
+.ctr .amo{padding:2px 10px;border:1px solid var(--line);font-weight:600}
+.badge{font-size:11px;font-weight:600;padding:1px 8px;border:1px solid}
+.badge.ok{color:var(--ok);border-color:var(--ok)}.badge.no{color:var(--err);border-color:var(--err)}
+.hint{font-size:12px;color:var(--mute);margin:0}
+.radios{display:flex;gap:6px;flex-wrap:wrap}
+.radios label{display:flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink);margin:0;border:1px solid var(--line);padding:6px 10px;cursor:pointer;background:var(--bg)}
+.radios input:checked+span{font-weight:600}
+.amostra{border:1px dashed var(--line);padding:12px;background:var(--bg)}
+.amostra .t{font-size:26px;line-height:1.15;margin:0 0 4px}
+.barra{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.barra select{width:auto}
+.frame{border:1px solid var(--line);background:#8884;margin:auto;max-width:100%;transition:width .2s}
+iframe{display:block;width:100%;height:78vh;min-height:520px;border:0;background:#fff}
+.aviso{background:var(--card);border:1px solid var(--line);padding:10px 14px;margin:0 20px 10px;display:none;gap:10px;align-items:center;flex-wrap:wrap}
+.aviso.on{display:flex}
+</style>
+</head>
+<body>
+<header class="top">
+  <div><h1>Temas e aparência</h1><p class="hint">Cores, fontes, forma e layout da vitrine — sem mexer no HTML.</p></div>
+  <div class="acoes">
+    <a class="btn ghost sm" href="index.html">← Painel</a>
+    <button class="btn ghost sm" id="b-github-ler" type="button">Carregar do GitHub</button>
+    <button class="btn sm" id="b-publicar" type="button">Publicar tema</button>
+  </div>
+</header>
+<div id="status" role="status"></div>
+<div class="aviso" id="aviso"><span>Há um rascunho de tema salvo neste navegador.</span><button class="btn sm" id="b-rest" type="button">Restaurar</button><button class="btn ghost sm" id="b-desc" type="button">Descartar</button></div>
+
+<div class="layout">
+  <aside id="painel">
+    <details open><summary>1. Estilos prontos</summary><div class="sec">
+      <p class="hint">Pontos de partida inspirados em estilos comuns de lojas de moda online. Escolha um e ajuste.</p>
+      <div class="presets" id="presets"></div>
+    </div></details>
+
+    <details open><summary>2. Cores</summary><div class="sec" id="s-cores"></div></details>
+    <details><summary>3. Modo escuro</summary><div class="sec" id="s-escuro"></div></details>
+    <details open><summary>4. Fontes</summary><div class="sec" id="s-fontes"></div></details>
+    <details><summary>5. Forma e layout</summary><div class="sec" id="s-forma"></div></details>
+    <details><summary>6. Exportar e importar</summary><div class="sec">
+      <label for="json">Tema em JSON (vai para o campo <code>tema</code> do <code>site.json</code>)</label>
+      <textarea id="json" rows="10" spellcheck="false"></textarea>
+      <div class="acoes">
+        <button class="btn ghost sm" id="b-copiar" type="button">Copiar</button>
+        <button class="btn ghost sm" id="b-baixar" type="button">Baixar tema.json</button>
+        <button class="btn ghost sm" id="b-aplicar" type="button">Aplicar o JSON do campo</button>
+      </div>
+    </div></details>
+  </aside>
+
+  <main id="area-prev">
+    <div class="barra">
+      <span class="hint">Prévia:</span>
+      <button class="btn ghost sm" data-w="390" type="button">Celular</button>
+      <button class="btn ghost sm" data-w="768" type="button">Tablet</button>
+      <button class="btn ghost sm" data-w="100%" type="button">Computador</button>
+      <select id="p-modo" aria-label="Modo da prévia"><option value="">Modo: como o tema define</option><option value="claro">Forçar claro</option><option value="escuro">Forçar escuro</option></select>
+      <button class="btn ghost sm" id="b-recarregar" type="button">Recarregar</button>
+    </div>
+    <div class="frame" id="frame" style="width:100%"><iframe id="prev" title="Prévia da loja" src="../index.html"></iframe></div>
+    <p class="hint" style="margin-top:8px">A prévia usa o catálogo real. Abra este arquivo por um servidor (não por duplo clique); se a prévia ficar em branco, veja o README.</p>
+  </main>
+</div>
+
+<script src="../tema.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const clone=o=>JSON.parse(JSON.stringify(o));
+const status=(m,c)=>{const s=$('#status');s.textContent=m;s.className=c||''};
+const RASC='cst.tema.rascunho';
+let T=null,siteTema=null,prevModo='',tp;
+
+/* ---------- estado ---------- */
+function estadoDe(tema){
+  const n=Tema.normalizar(tema),custom=!!(tema&&tema.escuro&&tema.escuro.cores&&Object.keys(tema.escuro.cores).length);
+  return {preset:n.preset,cores:n.cores,escuro:{modo:n.escuro.modo,custom:custom,cores:n.escuro.cores},fontes:n.fontes,forma:n.forma,layout:n.layout};
+}
+function exportar(){
+  const n=Tema.normalizar({preset:T.preset,cores:T.cores,escuro:{modo:T.escuro.modo,cores:T.escuro.custom?T.escuro.cores:{}},fontes:T.fontes,forma:T.forma,layout:T.layout});
+  if(!T.escuro.custom)delete n.escuro.cores;
+  return n;
+}
+
+/* ---------- campos ---------- */
+const NOMES={fundo:'Fundo',cartao:'Cartões e seções',texto:'Texto',suave:'Texto secundário',linha:'Linhas e bordas',destaque:'Destaque (selos, ícones)',destaqueTexto:'Texto sobre o destaque',botao:'Botões',botaoTexto:'Texto dos botões'};
+function campoCor(obj,k,rot){
+  const w=el('div','cor'),c=el('input'),t=el('input'),b=el('div');
+  c.type='color';c.value=obj[k];c.setAttribute('aria-label','Cor: '+rot);
+  t.type='text';t.value=obj[k];t.maxLength=7;t.setAttribute('aria-label','Código da cor: '+rot);
+  const set=v=>{v=Tema.norm(v,null);if(!v)return;obj[k]=v;c.value=v;t.value=v;T.preset=T.preset;atualizar()};
+  c.oninput=()=>set(c.value);t.onchange=()=>{if(!Tema.norm(t.value,null))t.value=obj[k];else set(t.value)};
+  b.append(el('label',0,rot),t);w.append(c,b);return w;
+}
+function selecao(rot,obj,k,ops,aoMudar){
+  const w=el('div'),s=el('select');w.append(el('label',0,rot));
+  ops.forEach(o=>{const op=el('option',0,o[1]);op.value=o[0];s.append(op)});
+  s.value=String(obj[k]);s.onchange=()=>{const v=s.value;obj[k]=isNaN(Number(v))||v===''?v:Number(v);(aoMudar||atualizar)()};
+  w.append(s);return w;
+}
+function faixa(rot,obj,k,min,max,passo,fmt){
+  const w=el('div'),l=el('label'),r=el('input');r.type='range';r.min=min;r.max=max;r.step=passo;r.value=obj[k];
+  const pinta=()=>{l.textContent=rot+': '+(fmt?fmt(obj[k]):obj[k])};pinta();
+  r.oninput=()=>{obj[k]=Number(r.value);pinta();atualizar()};
+  w.append(l,r);return w;
+}
+function radios(rot,obj,k,ops){
+  const w=el('div'),g=el('div','radios'),nome='r-'+k+Math.random().toString(36).slice(2,6);
+  w.append(el('label',0,rot));
+  ops.forEach(o=>{const l=el('label'),i=el('input'),s=el('span',0,o[1]);i.type='radio';i.name=nome;i.value=o[0];i.checked=String(obj[k])===String(o[0]);
+    i.onchange=()=>{obj[k]=o[0];atualizar()};l.append(i,s);g.append(l)});
+  w.append(g);return w;
+}
+
+/* ---------- montagem ---------- */
+function montar(){
+  // presets
+  const P=$('#presets');P.replaceChildren();
+  Object.entries(Tema.PRESETS).forEach(([k,p])=>{
+    const n=Tema.normalizar(p.tema),b=el('button','preset');b.type='button';b.setAttribute('aria-pressed',String(T.preset===k));
+    b.style.background=n.cores.fundo;b.style.color=n.cores.texto;b.style.borderRadius=n.forma.raio+'px';
+    const nome=el('b',0,p.nome);nome.style.fontFamily="'"+n.fontes.titulo+"',Georgia,serif";nome.style.textTransform=n.fontes.caixaTitulo==='maiusculas'?'uppercase':'none';
+    const sw=el('div','sw');[n.cores.texto,n.cores.destaque,n.cores.botao,n.cores.cartao].forEach(c=>{const i=el('i');i.style.background=c;sw.append(i)});
+    b.append(nome,el('small',0,p.desc),sw);
+    b.onclick=()=>{T=estadoDe(p.tema);T.preset=k;montar();atualizar()};
+    P.append(b);
+  });
+  // cores
+  const C=$('#s-cores');C.replaceChildren();
+  C.append(el('p','hint','Escolha 3 cores e clique em “Gerar paleta” para calcular as demais — ou ajuste uma a uma.'));
+  ['fundo','texto','destaque'].forEach(k=>C.append(campoCor(T.cores,k,NOMES[k])));
+  const g=el('button','btn ghost sm','Gerar paleta a partir destas 3 cores');g.type='button';
+  g.onclick=()=>{Object.assign(T.cores,Tema.derivar(T.cores.fundo,T.cores.texto,T.cores.destaque));montar();atualizar()};
+  C.append(g);
+  const det=el('details');det.append(el('summary',0,'Todas as cores'));const ds=el('div','sec');
+  ['cartao','suave','linha','destaqueTexto','botao','botaoTexto'].forEach(k=>ds.append(campoCor(T.cores,k,NOMES[k])));
+  det.append(ds);C.append(det);
+  C.append(el('label',0,'Legibilidade (WCAG AA = 4,5 ou mais)'));
+  const ct=el('div','ctr');ct.id='ctr';C.append(ct);
+  const fx=el('button','btn ghost sm','Corrigir contraste automaticamente');fx.type='button';fx.onclick=corrigir;C.append(fx);
+  // escuro
+  const E=$('#s-escuro');E.replaceChildren();
+  E.append(radios('Como a loja se comporta',T.escuro,'modo',[['auto','Seguir o aparelho'],['nunca','Sempre claro'],['sempre','Sempre escuro']]));
+  const ck=el('label','radios');const cb=el('input');cb.type='checkbox';cb.checked=T.escuro.custom;
+  cb.onchange=()=>{T.escuro.custom=cb.checked;if(!cb.checked)T.escuro.cores=Tema.derivarEscuro(T.cores);montar();atualizar()};
+  const cs=el('span',0,'Personalizar as cores do modo escuro');ck.append(cb,cs);ck.style.border='0';ck.style.padding='0';E.append(ck);
+  if(T.escuro.custom){Object.keys(NOMES).forEach(k=>E.append(campoCor(T.escuro.cores,k,NOMES[k])))}
+  else{const sw=el('div','sw');Object.values(T.escuro.cores).slice(0,6).forEach(c=>{const i=el('i');i.style.background=c;sw.append(i)});E.append(el('p','hint','Calculado automaticamente a partir das cores claras:'),sw)}
+  // fontes
+  const F=$('#s-fontes');F.replaceChildren();
+  const grupo=(rot,obj,k)=>{
+    const w=el('div'),s=el('select');w.append(el('label',0,rot));
+    [['serif','Com serifa'],['sans','Sem serifa']].forEach(([t,nome])=>{const og=document.createElement('optgroup');og.label=nome;Tema.FONTES.filter(f=>f.t===t).forEach(f=>{const o=el('option',0,f.n);o.value=f.n;og.append(o)});s.append(og)});
+    s.value=obj[k];s.onchange=()=>{obj[k]=s.value;if(k==='titulo'){const ps=Tema.pesosDe(s.value);if(ps.indexOf(T.fontes.pesoTitulo)<0)T.fontes.pesoTitulo=0}montar();atualizar()};
+    w.append(s);return w;
+  };
+  F.append(grupo('Fonte dos títulos',T.fontes,'titulo'),grupo('Fonte do texto',T.fontes,'texto'));
+  F.append(selecao('Peso dos títulos',T.fontes,'pesoTitulo',[[0,'Padrão do site']].concat(Tema.pesosDe(T.fontes.titulo).map(p=>[p,p+({300:' (leve)',400:' (normal)',500:' (médio)',600:' (semi-negrito)',700:' (negrito)'}[p]||'')]))));
+  F.append(selecao('Caixa dos títulos',T.fontes,'caixaTitulo',[['normal','Normal'],['maiusculas','MAIÚSCULAS']]));
+  F.append(faixa('Espaço entre letras dos títulos',T.fontes,'espacoTitulo',-3,12,1,v=>(v/100).toFixed(2)+' em'));
+  F.append(faixa('Tamanho base do texto',T.fontes,'tamanhoBase',13,19,1,v=>v+' px'));
+  const am=el('div','amostra');am.id='amostra';
+  am.append(el('p','t','Últimas peças. Nova fase.'),el('span',0,'Texto de exemplo: peças básicas, atemporais e confortáveis, feitas para o dia a dia.'));
+  F.append(am);
+  // forma e layout
+  const M=$('#s-forma');M.replaceChildren();
+  M.append(faixa('Arredondamento dos cantos',T.forma,'raio',0,28,1,v=>v+' px'));
+  M.append(radios('Botões',T.forma,'botao',[['quadrado','Quadrados'],['arredondado','Arredondados'],['pilula','Pílula']]));
+  M.append(selecao('Cabeçalho',T.layout,'cabecalho',[['fixo','Fixo (logo à esquerda)'],['centro','Fixo (logo centralizado)'],['estatico','Rola com a página']]));
+  M.append(selecao('Abertura (texto inicial)',T.layout,'abertura',[['centro','Centralizada'],['esquerda','À esquerda']]));
+  M.append(selecao('Cartões de produto',T.layout,'cartao',[['limpo','Limpo (sem moldura)'],['moldura','Com moldura'],['sombra','Com sombra']]));
+  M.append(selecao('Proporção das fotos',T.layout,'proporcao',[['3/4','3:4 (vertical)'],['4/5','4:5'],['2/3','2:3 (alongada)'],['1/1','1:1 (quadrada)']]));
+  const r=el('div','row2');
+  r.append(selecao('Colunas no celular',T.layout,'colunasMobile',[[1,'1'],[2,'2']]),selecao('Colunas no computador',T.layout,'colunasDesktop',[[3,'3'],[4,'4'],[5,'5']]));
+  M.append(r);
+  M.append(selecao('Espaçamento entre seções',T.layout,'densidade',[['compacta','Compacto'],['confortavel','Confortável'],['espacosa','Espaçoso']]));
+}
+
+/* ---------- contraste ---------- */
+function pintarContraste(){
+  const c=T.cores,box=$('#ctr');if(!box)return;box.replaceChildren();
+  [['Texto sobre o fundo',c.texto,c.fundo],['Texto secundário sobre o fundo',c.suave,c.fundo],['Texto sobre os cartões',c.texto,c.cartao],['Texto dos botões',c.botaoTexto,c.botao],['Texto sobre o destaque',c.destaqueTexto,c.destaque]].forEach(([n,a,b])=>{
+    const r=Tema.contraste(a,b),ok=r>=4.5,s=el('span',0,'Aa');s.style.cssText='background:'+b+';color:'+a+';padding:2px 10px;border:1px solid '+c.linha;
+    box.append(s,el('span',0,n+' · '+r.toFixed(1)+':1'),el('span','badge '+(ok?'ok':'no'),ok?'AA ✓':'baixo'));
+  });
+}
+function corrigir(){
+  const c=T.cores;
+  c.texto=Tema.ajustar(c.texto,c.fundo,4.5);c.suave=Tema.ajustar(c.suave,c.fundo,4.5);
+  if(Tema.contraste(c.texto,c.cartao)<4.5)c.cartao=Tema.derivar(c.fundo,c.texto,c.destaque).cartao;
+  if(Tema.contraste(c.botaoTexto,c.botao)<4.5)c.botaoTexto=Tema.melhorTexto(c.botao);
+  if(Tema.contraste(c.destaqueTexto,c.destaque)<4.5)c.destaqueTexto=Tema.melhorTexto(c.destaque);
+  montar();atualizar();status('Contraste ajustado onde foi possível.','ok');
+}
+
+/* ---------- atualização, prévia e rascunho ---------- */
+function atualizar(){
+  if(!T.escuro.custom)T.escuro.cores=Tema.derivarEscuro(T.cores);
+  const ex=exportar();
+  $('#json').value=JSON.stringify(ex,null,2);
+  pintarContraste();
+  // fontes da própria ferramenta (amostra)
+  let lk=document.getElementById('f-ed');if(!lk){lk=document.createElement('link');lk.id='f-ed';lk.rel='stylesheet';document.head.appendChild(lk)}
+  const u=Tema.fontesUrl(Tema.normalizar(ex));if(lk.getAttribute('href')!==u)lk.setAttribute('href',u);
+  const am=$('#amostra');if(am){am.style.background=T.cores.fundo;am.style.color=T.cores.texto;am.style.borderRadius=T.forma.raio+'px';am.style.fontFamily="'"+T.fontes.texto+"',system-ui,sans-serif";
+    const t=am.querySelector('.t');t.style.fontFamily="'"+T.fontes.titulo+"',Georgia,serif";t.style.fontWeight=T.fontes.pesoTitulo||400;t.style.textTransform=T.fontes.caixaTitulo==='maiusculas'?'uppercase':'none';t.style.letterSpacing=(T.fontes.espacoTitulo/100)+'em'}
+  clearTimeout(tp);tp=setTimeout(()=>{enviar(ex);try{localStorage.setItem(RASC,JSON.stringify(ex))}catch(e){}},90);
+}
+function enviar(ex){
+  const w=$('#prev').contentWindow;if(!w)return;
+  w.postMessage({tipo:'tema',tema:ex||exportar(),modo:prevModo||undefined},location.origin);
+}
+$('#prev').addEventListener('load',()=>enviar());
+$('#p-modo').onchange=e=>{prevModo=e.target.value;enviar()};
+$('#b-recarregar').onclick=()=>$('#prev').contentWindow.location.reload();
+document.querySelectorAll('.barra [data-w]').forEach(b=>b.onclick=()=>{$('#frame').style.width=b.dataset.w==='100%'?'100%':b.dataset.w+'px'});
+
+/* ---------- exportar / importar ---------- */
+$('#b-copiar').onclick=async()=>{try{await navigator.clipboard.writeText($('#json').value);status('JSON copiado.','ok')}catch(e){$('#json').select();status('Selecione e copie manualmente (Ctrl+C).','')}};
+$('#b-baixar').onclick=()=>{const a=el('a');a.href=URL.createObjectURL(new Blob([$('#json').value+'\n'],{type:'application/json'}));a.download='tema.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+$('#b-aplicar').onclick=()=>{
+  try{
+    const j=JSON.parse($('#json').value);if(!j||typeof j!=='object'||Array.isArray(j))throw new Error('o JSON precisa ser um objeto');
+    T=estadoDe(j.tema||j);montar();atualizar();status('Tema aplicado a partir do JSON.','ok');
+  }catch(e){status('JSON inválido: '+e.message,'err')}
+};
+
+/* ---------- GitHub (usa a conexão salva pelo painel) ---------- */
+function cfg(){try{return JSON.parse(localStorage.getItem('cst.cfg')||sessionStorage.getItem('cst.cfg')||'{}')}catch(e){return {}}}
+async function gh(C,path,opt){
+  opt=opt||{};
+  const r=await fetch('https://api.github.com/repos/'+C.repo+path,{method:opt.method||'GET',
+    headers:{Authorization:'Bearer '+C.token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'},
+    body:opt.body?JSON.stringify(opt.body):undefined});
+  if(!r.ok){let m='';try{m=(await r.json()).message}catch(e){}const e=new Error('GitHub '+r.status+(m?': '+m:''));e.status=r.status;throw e}
+  return r.json();
+}
+const dec64=c=>new TextDecoder().decode(Uint8Array.from(atob(c.replace(/\s/g,'')),x=>x.charCodeAt(0)));
+const enc64=s=>{const b=new TextEncoder().encode(s);let o='';for(let i=0;i<b.length;i+=8192)o+=String.fromCharCode.apply(null,b.subarray(i,i+8192));return btoa(o)};
+function conexao(){
+  const C=cfg();if(!C.token||!C.repo){status('Conecte ao GitHub primeiro: abra o Painel, preencha “1. Conexão” e volte aqui.','err');return null}
+  C.branch=C.branch||'main';C.base=C.base?C.base+'/':'';return C;
+}
+async function lerSite(C){const f=await gh(C,'/contents/'+C.base+'data/site.json?ref='+encodeURIComponent(C.branch));return {sha:f.sha,json:JSON.parse(dec64(f.content))}}
+$('#b-github-ler').onclick=async()=>{
+  const C=conexao();if(!C)return;
+  try{status('Lendo o site.json do GitHub…');const s=await lerSite(C);siteTema=s.json.tema||null;T=estadoDe(siteTema||Tema.PADRAO);montar();atualizar();status(siteTema?'Tema carregado do GitHub.':'O site ainda não tem tema; mostrando o padrão.','ok')}
+  catch(e){status('Falhou: '+e.message,'err')}
+};
+$('#b-publicar').onclick=async()=>{
+  const C=conexao();if(!C)return;
+  const bt=$('#b-publicar');bt.disabled=true;
+  try{
+    status('Lendo o site.json…');const s=await lerSite(C);
+    s.json.tema=exportar();
+    status('Enviando…');
+    await gh(C,'/contents/'+C.base+'data/site.json',{method:'PUT',body:{message:'Tema: '+((Tema.PRESETS[T.preset]||{}).nome||'personalizado'),content:enc64(JSON.stringify(s.json,null,2)+'\n'),sha:s.sha,branch:C.branch}});
+    siteTema=exportar();
+    status('Tema publicado! A Vercel atualiza o site em cerca de 30 segundos.','ok');
+  }catch(e){status('Falhou: '+e.message,'err')}
+  bt.disabled=false;
+};
+
+/* ---------- início ---------- */
+(async()=>{
+  let atual=null;
+  try{const r=await fetch('../data/site.json',{cache:'no-store'});if(r.ok)atual=(await r.json()).tema||null}catch(e){}
+  siteTema=atual;T=estadoDe(atual||Tema.PADRAO);montar();atualizar();
+  let r=null;try{r=JSON.parse(localStorage.getItem(RASC)||'null')}catch(e){}
+  if(r&&JSON.stringify(r)!==JSON.stringify(exportar())){
+    $('#aviso').classList.add('on');
+    $('#b-rest').onclick=()=>{T=estadoDe(r);montar();atualizar();$('#aviso').classList.remove('on')};
+    $('#b-desc').onclick=()=>{try{localStorage.removeItem(RASC)}catch(e){}$('#aviso').classList.remove('on')};
+  }
+})();
+</script>
+</body>
+</html>
