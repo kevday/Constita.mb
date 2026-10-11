@@ -116,5 +116,43 @@
         "prazo": "7 a 12 dias úteis"
       }
     ]
+  },
+  "tema": {
+    "preset": "mono",
+    "cores": {
+      "fundo": "#ffffff",
+      "cartao": "#f4f4f4",
+      "texto": "#111111",
+      "suave": "#757575",
+      "linha": "#e0e0e0",
+      "destaque": "#ff5a1f",
+      "destaqueTexto": "#111111",
+      "botao": "#111111",
+      "botaoTexto": "#ffffff"
+    },
+    "escuro": {
+      "modo": "auto"
+    },
+    "fontes": {
+      "titulo": "Inter",
+      "texto": "Inter",
+      "pesoTitulo": 500,
+      "caixaTitulo": "normal",
+      "espacoTitulo": -1,
+      "tamanhoBase": 15
+    },
+    "forma": {
+      "raio": 0,
+      "botao": "quadrado"
+    },
+    "layout": {
+      "cabecalho": "fixo",
+      "abertura": "centro",
+      "cartao": "limpo",
+      "proporcao": "4/5",
+      "colunasMobile": 2,
+      "colunasDesktop": 4,
+      "densidade": "confortavel"
+    }
   }
 }
