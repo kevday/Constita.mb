@@ -1,9 +1,13 @@
-# CONSTITA — site e painel de administração
+# Loja online — site e painel de administração
 
 Site estático (HTML + JS puros, sem build) que lê o conteúdo de dois arquivos JSON.
 Funciona na Vercel, no GitHub Pages ou em qualquer servidor que entregue arquivos.
 
-**Versão atual: 1.4.0** — veja o [Changelog](#changelog) no final.
+**Serve para qualquer ramo** — moda, papelaria, informática, galeria de arte, floricultura e outros.
+O nome da loja, o logo, o vocabulário (“peça”, “produto”, “obra”…), as seções e o visual
+vêm do `data/site.json`; **nada de marca ou de ramo fica no código**.
+
+**Versão atual: 1.5.0** — veja o [Changelog](#changelog) no final.
 
 ---
 
@@ -12,15 +16,16 @@ Funciona na Vercel, no GitHub Pages ou em qualquer servidor que entregue arquivo
 ### 1. Estrutura
 
 ```
-constita-site/
+loja-online/
 ├── index.html            Site (vitrine, carrossel, popup de detalhes, carrinho, cupom e frete)
 ├── tema.js               Motor de temas (gera o CSS a partir do bloco "tema")
 ├── admin/index.html      Painel para cadastrar/editar peças e configurar o site
-├── admin/temas.html      Editor visual de temas: cores, fontes, forma e layout
+├── admin/tema-editor.js  Editor visual de temas (usado pela aba Aparência do painel)
+├── admin/modelos.js      Modelos por ramo de negócio (usados pelo Assistente de início)
 ├── data/
 │   ├── site.json         Textos, WhatsApp, marcas, cupons e regras de frete
 │   └── produtos.json     Catálogo de peças
-├── img/                  Logo (k.jpg) e fotos; fotos novas vão para img/<categoria>/
+├── img/                  Logo e fotos; fotos novas vão para img/<categoria>/
 ├── ROADMAP.md            Planejamento (ideias e próximos passos)
 ├── ARQUITETURA.md        Proposta de plataforma multiloja (temas, pagamentos, dados)
 └── README.md
@@ -36,10 +41,10 @@ duplo clique** (`file://`). Sirva a pasta por HTTP:
 
 ```sh
 # Alpine (busybox)
-cd constita-site && busybox httpd -f -p 8080
+cd loja-online && busybox httpd -f -p 8080
 
 # Windows / qualquer sistema com Python
-cd constita-site && python3 -m http.server 8080
+cd loja-online && python3 -m http.server 8080
 ```
 
 Abra `http://localhost:8080` (site) e `http://localhost:8080/admin/` (painel).
@@ -154,30 +159,44 @@ Nada é publicado até você clicar em **Publicar**.
 | `fotos` | caminhos separados por `\|`; o primeiro é a capa |
 | `ativo` | `sim` / `não` |
 
-**Aparência e temas** (`/admin/temas.html`, ou o botão *Aparência e temas* no painel)
+**Primeiro uso: Assistente de início (aba Configuração do site)**
 
-- **8 estilos prontos** como ponto de partida — *Atelier* (o visual atual), *Mono*, *Rosé*,
-  *Urbano*, *Natural*, *Noir*, *Vibrante* e *Fresh* — inspirados em estilos comuns de lojas
-  de moda online. São composições próprias (cores, fontes e disposição); não copiam nenhum
-  modelo específico.
-- **Cores:** 9 cores (fundo, texto, destaque, botões…). Escolha 3 e use **Gerar paleta** para
-  calcular o resto. O verificador de **contraste (WCAG AA)** avisa quando o texto fica ilegível
-  e o botão **Corrigir contraste** ajusta sozinho.
-- **Modo escuro:** seguir o aparelho, sempre claro ou sempre escuro; as cores escuras são
-  calculadas automaticamente ou personalizadas.
-- **Fontes:** 21 famílias do Google Fonts (com e sem serifa) para títulos e texto, mais peso,
-  MAIÚSCULAS, espaço entre letras e tamanho base.
-- **Forma e layout:** arredondamento dos cantos, botões (quadrado, arredondado, pílula),
-  cabeçalho (fixo à esquerda, centralizado, que rola), abertura (centro ou esquerda), cartões
-  (limpo, moldura, sombra), proporção das fotos, colunas no celular e no computador, e
-  espaçamento entre seções.
-- **Prévia ao vivo** com o seu catálogo real (celular, tablet, computador; claro ou escuro).
-- **Salvar:** **Publicar tema** grava o bloco `tema` em `data/site.json` (usa a conexão feita no
-  painel e preserva o resto do arquivo); também dá para **copiar/baixar o JSON** ou importar um.
-  Um rascunho é guardado automaticamente neste navegador.
+Escolha o **ramo** (moda e vestuário, papelaria e escritório, informática e eletrônicos, galeria de arte,
+floricultura ou genérico), informe nome, WhatsApp e Instagram e clique em **Aplicar modelo**. Ele preenche
+**vocabulário, textos, seções, estilo visual e categorias**; opcionalmente cria 3 produtos de exemplo (sem
+fotos). Em loja nova (sem nome no `site.json`), o painel abre essa aba sozinho. Nada é publicado até você
+clicar em **Publicar**, e produtos e fotos que você já cadastrou **não são apagados**.
 
-> As fontes vêm do Google Fonts e são baixadas pelo navegador do visitante. A visão de
-> hospedar as fontes você mesmo está no `ARQUITETURA.md`.
+**Identidade, vocabulário e seções (aba Configuração do site)**
+
+- **Logo da loja:** envie PNG/JPG/WEBP; ele é reduzido (até 512 px), salvo em `img/logo.png` e usado no
+  cabeçalho, no rodapé e como ícone da aba do navegador. Sem logo, aparece só o nome da loja.
+- **Vocabulário:** troca os textos fixos do site conforme o ramo — item (singular e plural), gênero da
+  palavra, rótulo da 1ª variação (Tamanho, Modelo, Formato…), da 2ª (Cor, Moldura…) e os selos
+  (“Obra única”, “Poucas unidades”, “Esgotado”).
+- **Seções da página:** liga ou desliga o carrossel de destaques, a seção “Nova fase”/sobre a loja e a lista de novidades.
+
+**Aba Aparência (temas)**
+
+- **8 estilos prontos** como ponto de partida — *Atelier*, *Mono*, *Rosé*, *Urbano*, *Natural*, *Noir*,
+  *Vibrante* e *Fresh* — inspirados em estilos comuns de lojas online. São composições próprias (cores,
+  fontes e disposição); não copiam nenhum modelo específico.
+- **Cores:** 9 cores (fundo, texto, destaque, botões…). Escolha 3 e use **Gerar paleta** para calcular o
+  resto. O verificador de **contraste (WCAG AA)** avisa quando o texto fica ilegível e o botão **Corrigir
+  contraste** ajusta sozinho.
+- **Modo escuro:** seguir o aparelho, sempre claro ou sempre escuro; as cores escuras são calculadas
+  automaticamente ou personalizadas.
+- **Fontes:** 21 famílias do Google Fonts (com e sem serifa) para títulos e texto, mais peso, MAIÚSCULAS,
+  espaço entre letras e tamanho base.
+- **Forma e layout:** arredondamento dos cantos, botões (quadrado, arredondado, pílula), cabeçalho (fixo
+  à esquerda, centralizado, que rola), abertura (centro ou esquerda), cartões (limpo, moldura, sombra),
+  proporção das fotos, colunas no celular e no computador e espaçamento entre seções.
+- **Prévia ao vivo** (celular, tablet, computador; claro ou escuro) ao lado dos controles.
+- **Salvar:** as mudanças entram no `site.json` pelo botão **Publicar** do painel, junto com o resto
+  (uma única publicação). Também dá para **copiar/baixar o JSON do tema** ou importar um.
+
+> As fontes vêm do Google Fonts e são baixadas pelo navegador do visitante. A visão de hospedar as
+> fontes você mesmo está no `ARQUITETURA.md`.
 
 **Aba “Configuração do site”**: edita o `data/site.json` sem abrir o arquivo:
 nome da loja, WhatsApp (validado: 55 + DDD + número), Instagram, horário, textos
@@ -328,6 +347,14 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | `fundo` | não | Cor de fundo enquanto não há foto (ex.: `#c8b49a`) |
 | `ativo` | não | `false` esconde a peça do site sem apagá-la |
 
+**`termos` e `secoes`** (dentro do `site.json`) — adaptam o site ao ramo; campos ausentes usam o padrão:
+
+```json
+"termos": { "item": "obra", "itens": "obras", "genero": "f", "tamanho": "Formato", "cor": "Moldura",
+            "selo1": "Obra única", "selo2": "Poucas obras", "esgotado": "Esgotado" },
+"secoes": { "destaques": true, "novaFase": false, "novidades": false }
+```
+
 **`tema`** (dentro do `site.json`) — gerado pelo editor de temas; sem esse bloco a loja usa o visual padrão:
 
 ```json
@@ -358,11 +385,11 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | `layout.colunasMobile` / `colunasDesktop` | `1`–`2` / `3`–`5` |
 | `layout.densidade` | `compacta`, `confortavel`, `espacosa` |
 
-**`data/site.json`** — textos da página. Campos principais: `nome`, `whatsapp`
+**`data/site.json`** — identidade e textos da página. Campos principais: `nome`, `logo` (caminho da imagem, ex.: `img/logo.png`), `whatsapp`
 (com 55 + DDD, só números), `instagram`, `horario`, `aviso`, `msgPadrao` /
 `msgNovidades` (mensagens do WhatsApp), `hero`, `pecas`, `destaques.quantidade`
 (itens no carrossel), `novaFase`, `marcas`, `novidades`, `rodape`, `rodape2`,
-`cupons` (seção 6) e `frete` (seção 7). Tudo também é editável na aba
+`termos` (vocabulário), `secoes` (o que aparece na página), `cupons` (seção 6) e `frete` (seção 7). Tudo também é editável na aba
 “Configuração do site”.
 
 ### 11. Problemas comuns
@@ -380,10 +407,12 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 | Vídeo recusado no painel | Acima de 25 MB ou 60 s, ou formato/codec não suportado: exporte como MP4 (H.264) ou WEBM. |
 | Peça não aparece na busca do site | A busca exige que **todas** as palavras combinem (nome, SKU, categoria, cor, tamanho, descrição). |
 | Ordem das peças não mudou no site | Publique depois de reordenar; “Ordem da loja” é a ordem do painel (esgotadas vão ao fim). |
-| Prévia do editor de temas em branco | Abra o editor por um servidor (não por duplo clique) e confirme que `../index.html` carrega. |
+| Prévia da aba Aparência em branco | Abra o painel por um servidor (não por duplo clique) e confirme que `../index.html` carrega. |
 | Fonte do tema não aparece | Sem internet para o Google Fonts, ou nome da família digitado à mão que não esteja na lista do editor. |
 | Texto difícil de ler no tema | Use *Corrigir contraste automaticamente* no editor (meta: 4,5:1 ou mais). |
 | Tema publicado não muda o site | Aguarde o deploy (~30 s) e recarregue com Ctrl+F5; o navegador guarda o último tema em cache e atualiza na visita seguinte. |
+| Textos “peça/peças” aparecem em loja de outro ramo | Ajuste o **Vocabulário** na aba Configuração (ou aplique o modelo do ramo). |
+| Logo não aparece | Confira o campo `logo` do `site.json` e se o arquivo existe em `img/`. |
 | Foto não aparece | Caminho em `foto`/`fotos` diferente do arquivo real (atenção a maiúsculas). |
 | Preço cortado não aparece | `precoAntigo` menor ou igual ao `preco`, ou `promoAte` já passou. |
 | Cupom “inválido” / “mínimo” | Código digitado errado, cupom inativo/expirado ou subtotal abaixo do mínimo. |
@@ -406,15 +435,34 @@ HTML digitado é **exibido como texto**, nunca executado. O painel tem os botõe
 
 Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Mais recente primeiro.
 
+### [1.5.0] — 2026-10-11
+**Adicionado**
+- **Aba Aparência dentro do painel**: o editor de temas deixou de ser uma página separada e passou a
+  usar o mesmo botão **Publicar** (uma só publicação para peças, configuração e tema).
+- **Assistente de início por ramo** (moda, papelaria, informática, galeria de arte, floricultura, genérico):
+  vocabulário, textos, seções, estilo visual e produtos de exemplo.
+- **Vocabulário configurável** (`termos`): item, gênero, rótulos de variação e selos adaptáveis a qualquer ramo.
+- **Seções ligáveis** (`secoes`) e **logo configurável** (`logo`, com envio pelo painel e uso como ícone da aba).
+- Preços com separador de milhar (R$ 1.800,00).
+
+**Alterado**
+- **Nenhuma marca no código**: nome, logo, favicon, título e textos vêm do `site.json`; o painel usa
+  “produto” como termo neutro; chaves de armazenamento do navegador passaram a ser neutras
+  (a conexão salva é migrada automaticamente).
+- WhatsApp digitado com DDD + número ganha o `55` automaticamente.
+
+**Removido**
+- `admin/temas.html` (substituído pela aba Aparência).
+
 ### [1.4.0] — 2026-10-10
 **Adicionado**
-- **Editor visual de temas** (`admin/temas.html`) com 8 estilos prontos, 9 cores com gerador de paleta e
+- **Editor visual de temas** com 8 estilos prontos, 9 cores com gerador de paleta e
   verificador de contraste (WCAG AA), modo escuro (automático ou personalizado), 21 famílias de fontes,
   forma (cantos e botões) e layout (cabeçalho, abertura, cartões, proporção das fotos, colunas, espaçamento).
 - **Prévia ao vivo** com o catálogo real (celular, tablet, computador; claro ou escuro).
 - **Publicar tema** direto no `site.json` pelo GitHub, exportar/importar JSON e rascunho automático.
 - `tema.js`: motor de temas compartilhado pela vitrine e pelo editor.
-- Bloco `tema` no `site.json` (opcional) e atalho *Aparência e temas* no painel.
+- Bloco `tema` no `site.json` (opcional).
 
 **Alterado**
 - A vitrine passou a usar variáveis de tema para cores, fontes, cantos, colunas, proporção das fotos e
@@ -516,7 +564,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Mais recente pri
 
 ### [0.3.0] — 2026-09-28
 **Adicionado**
-- Logo (`k.jpg`) fixo no topo, que encolhe ao rolar a página.
+- Logo fixo no topo, que encolhe ao rolar a página.
 - Carrossel central com peças em estoque em ordem aleatória.
 - Menu/abas de categorias que filtram as peças.
 
@@ -528,9 +576,8 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Mais recente pri
 
 ### [0.1.0] — 2026-09-28
 **Adicionado**
-- Primeira versão do site, a partir do conteúdo do Instagram `@constita.mb` e
-  do site original na Vercel: abertura “Últimas peças. Nova fase.”, vitrine,
-  atendimento online, marcas CONSTita / CONSTita FIT e lista de novidades.
+- Primeira versão do site de uma loja de moda: abertura, vitrine, atendimento online,
+  marcas e lista de novidades.
 
 ---
 

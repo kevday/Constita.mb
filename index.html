@@ -3,11 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CONSTITA — Últimas peças. Novos caminhos.</title>
-<meta name="description" content="Últimas peças da coleção atual, com atendimento online pelo WhatsApp.">
-<meta property="og:title" content="CONSTITA — Últimas peças. Novos caminhos.">
-<link rel="icon" href="img/k.jpg">
-<script>try{var _t=JSON.parse(localStorage.getItem("constita-tema")||"null");if(_t){var _s=document.createElement("style");_s.id="tema";_s.textContent=_t.css;document.head.appendChild(_s);for(var _k in _t.attrs)document.documentElement.setAttribute(_k,_t.attrs[_k]);if(_t.fonte){var _l=document.createElement("link");_l.id="fonte-tema";_l.rel="stylesheet";_l.href=_t.fonte;document.head.appendChild(_l)}}}catch(e){}</script>
+<title>Loja online</title>
+<meta name="description" content="Loja online com atendimento pelo WhatsApp.">
+<meta property="og:title" content="Loja online">
+<script>try{var _t=JSON.parse(localStorage.getItem("loja-tema")||"null");if(_t){var _s=document.createElement("style");_s.id="tema";_s.textContent=_t.css;document.head.appendChild(_s);for(var _k in _t.attrs)document.documentElement.setAttribute(_k,_t.attrs[_k]);if(_t.fonte){var _l=document.createElement("link");_l.id="fonte-tema";_l.rel="stylesheet";_l.href=_t.fonte;document.head.appendChild(_l)}}}catch(e){}</script>
 <link id="fonte-base" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap">
 <style>
 :root{--bg:#faf8f4;--ink:#1c1814;--mute:#7a7066;--line:#e6dfd4;--card:#f3eee6;--dk:#1c1814;--dkt:#faf8f4;
@@ -194,7 +193,7 @@ html[data-abertura=esquerda] .hero p.t{margin-left:0;margin-right:0}
 <body>
 <div class="erro" id="erro" role="alert"></div>
 <header><div class="wrap">
-  <a class="logo" href="#topo"><img src="img/k.jpg" alt="" width="34" height="34"><span id="logo">CONSTITA</span></a>
+  <a class="logo" href="#topo"><img id="logo-img" alt="" width="34" height="34" hidden><span id="logo"></span></a>
   <button class="cartbtn" id="open" type="button">Carrinho (<span id="cnt">0</span>)</button>
 </div></header>
 
@@ -203,7 +202,7 @@ html[data-abertura=esquerda] .hero p.t{margin-left:0;margin-right:0}
   <p class="eyebrow" id="h-eyebrow"></p>
   <h1><span id="h-chamada"></span><br><em id="h-destaque"></em></h1>
   <p class="t" id="h-texto"></p>
-  <a class="btn" href="#pecas">Ver peças</a>
+  <a class="btn" id="h-btn" href="#pecas">Ver produtos</a>
   <p class="nota" id="aviso"></p>
 </div></section>
 
@@ -221,17 +220,17 @@ html[data-abertura=esquerda] .hero p.t{margin-left:0;margin-right:0}
   <h2 id="p-titulo"></h2>
   <p class="lead" id="p-texto"></p>
   <div class="busca" role="search">
-    <div class="bx"><input type="search" id="q" placeholder="Buscar peça, SKU ou cor" aria-label="Buscar peças" autocomplete="off" enterkeyhint="search"><button type="button" class="qx" id="q-x" aria-label="Limpar busca" hidden>×</button></div>
-    <select id="ord" aria-label="Ordenar peças"><option value="">Ordem da loja</option><option value="menor">Menor preço</option><option value="maior">Maior preço</option><option value="az">Nome A–Z</option><option value="desc">Maior desconto</option></select>
+    <div class="bx"><input type="search" id="q" placeholder="Buscar produto, SKU ou cor" aria-label="Buscar" autocomplete="off" enterkeyhint="search"><button type="button" class="qx" id="q-x" aria-label="Limpar busca" hidden>×</button></div>
+    <select id="ord" aria-label="Ordenar"><option value="">Ordem da loja</option><option value="menor">Menor preço</option><option value="maior">Maior preço</option><option value="az">Nome A–Z</option><option value="desc">Maior desconto</option></select>
     <label class="chkp"><input type="checkbox" id="so-promo"> Só promoções</label>
   </div>
   <div class="chips" id="chips"></div>
   <p class="cont" id="cont" aria-live="polite"></p>
   <div class="grid" id="grid"></div>
-  <div class="mais" id="mais" hidden><button class="btn ghost" id="ver-mais" type="button">Ver mais peças</button></div>
+  <div class="mais" id="mais" hidden><button class="btn ghost" id="ver-mais" type="button">Ver mais</button></div>
 </div></section>
 
-<section class="next"><div class="wrap">
+<section class="next" id="sec-nova"><div class="wrap">
   <p class="eyebrow" id="n-eyebrow"></p>
   <h2 id="n-titulo"></h2>
   <p class="lead" id="n-texto"></p>
@@ -239,7 +238,7 @@ html[data-abertura=esquerda] .hero p.t{margin-left:0;margin-right:0}
   <p class="soon" id="n-frase"></p>
 </div></section>
 
-<section class="center"><div class="wrap">
+<section class="center" id="sec-novidades"><div class="wrap">
   <p class="eyebrow" id="nv-eyebrow"></p>
   <h2 id="nv-titulo"></h2>
   <p class="lead" id="nv-texto"></p>
@@ -248,7 +247,7 @@ html[data-abertura=esquerda] .hero p.t{margin-left:0;margin-right:0}
 </main>
 
 <footer><div class="wrap">
-  <a class="logo" href="#topo"><img src="img/k.jpg" alt="" width="26" height="26"><span id="f-logo"></span></a><br>
+  <a class="logo" href="#topo"><img id="f-logo-img" alt="" width="26" height="26" hidden><span id="f-logo"></span></a><br>
   <span id="f-frase"></span><br><span id="f-frase2"></span><br><span id="f-horario"></span>
 </div></footer>
 
@@ -296,15 +295,25 @@ html[data-abertura=esquerda] .hero p.t{margin-left:0;margin-right:0}
 
 <script src="tema.js"></script>
 <script>
-/* Conteúdo: data/site.json (textos, WhatsApp, marcas) e data/produtos.json (peças).
+/* Conteúdo: data/site.json (nome, logo, textos, WhatsApp, marcas, termos) e data/produtos.json.
    Aqui só existe a lógica da página — não é preciso editar este arquivo para atualizar o site. */
 const $=s=>document.querySelector(s);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const set=(s,v)=>{const n=$(s);if(n)n.textContent=v==null?'':v};
-const brl=v=>'R$ '+Number(v).toFixed(2).replace('.',',');
+const brl=v=>'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const FUNDO='#c8b49a';
 let S,P=[],SEL=[],cat='Todos',cart=[],TAM={},COR={},IDX={},need=0,modalId=null;
 let Q='',ORD='',PROMO=false,PAG=24;const PASSO=24;
+/* Vocabulário da loja (site.json → "termos"): serve para qualquer ramo, não só vestuário */
+const TD={item:'produto',itens:'produtos',genero:'m',tamanho:'Tamanho',cor:'Cor'};
+let TM={...TD};
+const gen=(f,m)=>TM.genero==='f'?f:m;
+function termos(t){
+  TM={...TD,...(t||{})};
+  if(!TM.selo1)TM.selo1=gen('Última','Último')+' '+TM.item;
+  if(!TM.selo2)TM.selo2='Últimas unidades';
+  if(!TM.esgotado)TM.esgotado='Esgotado';
+}
 const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 /* Mídia: fotos e vídeos curtos na mesma lista. O pôster do vídeo é o mesmo caminho com .jpg */
 const ehVideo=s=>/\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(s||'');
@@ -355,7 +364,7 @@ const falta=p=>{const f=[];if(p.tams.length&&!TAM[p.id])f.push('tamanho');if(p.c
 
 function badge(p){
   if(p.selo)return p.selo;
-  return p.estoque<=0?'Esgotado':p.estoque===1?'Última peça':p.estoque<=2?'Últimas unidades':'';
+  return p.estoque<=0?TM.esgotado:p.estoque===1?TM.selo1:p.estoque<=2?TM.selo2:'';
 }
 function foto(box,p){
   if(!p.foto)return;
@@ -374,23 +383,23 @@ function preco(p,pop){
 function opcoes(p){
   const w=el('div','opc'),f=falta(p),n=need===p.id;
   if(p.tams.length){
-    const box=el('div','szs'+(n&&f.includes('tamanho')?' need':''));box.setAttribute('role','group');box.setAttribute('aria-label','Tamanho');
+    const box=el('div','szs'+(n&&f.includes('tamanho')?' need':''));box.setAttribute('role','group');box.setAttribute('aria-label',TM.tamanho);
     p.tams.forEach(t=>{const b=el('button','tb'+(TAM[p.id]===t?' on':''),t);b.type='button';b.dataset.tam=t;b.dataset.id=p.id;b.setAttribute('aria-pressed',TAM[p.id]===t);box.append(b)});
     w.append(box);
   }
   if(p.cores.length){
-    const box=el('div','szs cores'+(n&&f.includes('cor')?' need':''));box.setAttribute('role','group');box.setAttribute('aria-label','Cor');
+    const box=el('div','szs cores'+(n&&f.includes('cor')?' need':''));box.setAttribute('role','group');box.setAttribute('aria-label',TM.cor);
     p.cores.forEach(c=>{
       const b=el('button','cb'+(COR[p.id]===c.nome?' on':''));b.type='button';b.dataset.cor=c.nome;b.dataset.id=p.id;
-      b.style.background=c.valor;b.title=c.nome;b.setAttribute('aria-label','Cor '+c.nome);b.setAttribute('aria-pressed',COR[p.id]===c.nome);box.append(b);
+      b.style.background=c.valor;b.title=c.nome;b.setAttribute('aria-label',TM.cor+' '+c.nome);b.setAttribute('aria-pressed',COR[p.id]===c.nome);box.append(b);
     });
-    box.append(el('span','cn',COR[p.id]||'Escolha a cor'));w.append(box);
+    box.append(el('span','cn',COR[p.id]||'Escolha '+TM.cor.toLowerCase()));w.append(box);
   }
   return w;
 }
 function botaoAdd(p){
   const out=!(p.estoque>0),inC=cart.some(x=>x.id===p.id),f=falta(p);
-  const rot=out?'Indisponível':inC?'No carrinho ✓':need===p.id&&f.length?'Escolha '+(f.length>1?'tamanho e cor':f[0]==='cor'?'a cor':'o tamanho'):'Adicionar ao carrinho';
+  const rot=out?'Indisponível':inC?'No carrinho ✓':need===p.id&&f.length?'Escolha '+(f.length>1?TM.tamanho.toLowerCase()+' e '+TM.cor.toLowerCase():f[0]==='cor'?TM.cor.toLowerCase():TM.tamanho.toLowerCase()):'Adicionar ao carrinho';
   const b=el('button','btn add'+(inC?' in':''),rot);b.type='button';b.dataset.add=p.id;b.disabled=out;return b;
 }
 
@@ -426,12 +435,12 @@ function renderGrid(){
   let corpo;
   if(vis.length)corpo=vis.map(card);
   else{
-    const p=el('p','empty',(Q||PROMO||cat!=='Todos')?'Nenhuma peça encontrada com esses filtros. ':'Nenhuma peça disponível no momento.');
+    const p=el('p','empty',(Q||PROMO||cat!=='Todos')?gen('Nenhuma ','Nenhum ')+TM.item+' encontrad'+gen('a','o')+' com esses filtros. ':gen('Nenhuma ','Nenhum ')+TM.item+' disponível no momento.');
     if(Q||PROMO||cat!=='Todos'){const b=el('button','ver','Limpar filtros');b.type='button';b.dataset.limpar='1';p.append(b)}
     corpo=[p];
   }
   $('#grid').replaceChildren(...corpo);
-  set('#cont',l.length?(vis.length<l.length?'Mostrando '+vis.length+' de '+l.length+' peças':l.length+(l.length>1?' peças':' peça')):'');
+  set('#cont',l.length?(vis.length<l.length?'Mostrando '+vis.length+' de '+l.length+' '+TM.itens:l.length+' '+(l.length>1?TM.itens:TM.item)):'');
   $('#mais').hidden=vis.length>=l.length;
 }
 function renderTrack(){
@@ -459,7 +468,7 @@ const regraCep=cep=>((frete()||{}).regras||[]).find(r=>(r.cep||[]).some(t=>{cons
 function erroCupom(c,sub){
   if(c.validoAte){const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(c.validoAte)?c.validoAte+'T23:59:59':c.validoAte);if(!isNaN(d)&&Date.now()>d.getTime())return 'Este cupom expirou.'}
   if(c.minimo>0&&sub<c.minimo)return 'Pedido mínimo de '+brl(c.minimo)+' para este cupom.';
-  if(c.soSemPromo&&!cart.some(x=>!x.promo))return 'Este cupom vale só para peças sem promoção.';
+  if(c.soSemPromo&&!cart.some(x=>!x.promo))return 'Este cupom vale só para '+TM.itens+' sem promoção.';
   return '';
 }
 function totais(){
@@ -485,7 +494,7 @@ function valorFrete(rg,liq,gratisCupom){
   const F=frete(),lim=rg.gratisAcima>0?rg.gratisAcima:(F.gratisAcima||0);
   return gratisCupom||(lim>0&&liq>=lim)?0:r2(rg.valor);
 }
-const det=x=>[x.tam&&'tam. '+x.tam,x.cor&&'cor '+x.cor].filter(Boolean).join(', ');
+const det=x=>[x.tam&&TM.tamanho.toLowerCase()+' '+x.tam,x.cor&&TM.cor.toLowerCase()+' '+x.cor].filter(Boolean).join(', ');
 function msgPedido(T){
   let m='Olá! Gostaria de finalizar meu pedido:\n'+cart.map(x=>'• '+x.nome+(det(x)?' ('+det(x)+')':'')+(x.sku?' [SKU '+x.sku+']':'')+' — '+brl(x.preco)).join('\n');
   m+='\nSubtotal: '+brl(T.sub);
@@ -577,7 +586,7 @@ function draw(){renderChips();renderGrid();renderTrack();renderCart();if(dlg.ope
 function toggle(o){$('#drawer').classList.toggle('open',o);$('#ov').classList.toggle('open',o)}
 
 /* Carrinho, cupom e CEP salvos no navegador (só volta o que ainda existe e está em estoque) */
-const CK='constita-cart';
+const CK='loja-carrinho';
 function loadCart(){
   try{
     let raw=JSON.parse(localStorage.getItem(CK)||'[]');
@@ -662,7 +671,17 @@ $('#mg-main').addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passiv
 $('#mg-main').addEventListener('touchend',e=>{if(tx==null)return;const d=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(d)>45)navFoto(d<0?1:-1)});
 
 function texto(){
-  document.title=S.nome+' — '+S.hero.nota;
+  termos(S.termos);
+  document.title=S.nome+(S.hero&&S.hero.nota?' — '+S.hero.nota:'');
+  const og=document.querySelector('meta[property="og:title"]');if(og)og.setAttribute('content',document.title);
+  const lg=S.logo||'';
+  ['logo-img','f-logo-img'].forEach(i=>{const im=$('#'+i);if(lg){im.src=lg;im.hidden=false}else im.hidden=true});
+  if(lg){let ic=document.querySelector('link[rel=icon]');if(!ic){ic=document.createElement('link');ic.rel='icon';document.head.appendChild(ic)}ic.href=S.favicon||lg}
+  set('#h-btn',(S.hero&&S.hero.botao)||'Ver '+TM.itens);
+  $('#q').placeholder='Buscar '+TM.item+', SKU ou '+TM.cor.toLowerCase();$('#q').setAttribute('aria-label','Buscar '+TM.itens);
+  $('#ord').setAttribute('aria-label','Ordenar '+TM.itens);set('#ver-mais','Ver mais '+TM.itens);
+  const sc=S.secoes||{};
+  $('#sec-nova').hidden=sc.novaFase===false;$('#sec-novidades').hidden=sc.novidades===false;if(sc.destaques===false)$('#destaques').hidden=true;
   set('#logo',S.nome);set('#f-logo',S.nome);
   set('#h-eyebrow',S.hero.eyebrow);set('#h-chamada',S.hero.chamada);set('#h-destaque',S.hero.destaque);
   set('#h-texto',S.hero.texto);set('#aviso',S.aviso);
@@ -677,7 +696,7 @@ function texto(){
   }));
 }
 
-/* Carrossel: peças em estoque, em ordem aleatória a cada visita */
+/* Carrossel: itens em estoque, em ordem aleatória a cada visita */
 function carrossel(){
   const pool=P.filter(p=>p.estoque>0);
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
@@ -731,7 +750,7 @@ $('#checkout').addEventListener('click',e=>{if(!cart.length)e.preventDefault()})
 $('#open').onclick=()=>toggle(true);$('#close').onclick=$('#ov').onclick=()=>toggle(false);
 addEventListener('scroll',()=>document.body.classList.toggle('scrolled',scrollY>40),{passive:true});
 
-/* Prévia ao vivo vinda do editor de temas (admin/temas.html), somente na mesma origem */
+/* Prévia ao vivo vinda do editor de temas (aba Aparência do painel), somente na mesma origem */
 addEventListener('message',e=>{
   const m=e.data;if(e.origin!==location.origin||parent===window||!m||!window.Tema)return;
   if(m.tipo==='tema'){Tema.aplicar(m.tema,{previa:true});if(m.modo)document.documentElement.setAttribute('data-modo',m.modo)}

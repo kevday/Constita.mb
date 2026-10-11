@@ -1,6 +1,6 @@
-/* Motor de temas da vitrine CONSTITA.
+/* Motor de temas da vitrine.
    Transforma o bloco "tema" do site.json (cores, fontes, forma e layout) em CSS.
-   É usado pela vitrine (index.html) e pelo editor de temas (admin/temas.html). */
+   É usado pela vitrine (index.html) e pelo editor de temas (aba Aparência do painel). */
 (function(g){
 'use strict';
 
@@ -174,14 +174,14 @@ function aplicar(t,opt){
   let lk=d.getElementById('fonte-tema');if(!lk){lk=d.createElement('link');lk.id='fonte-tema';lk.rel='stylesheet';d.head.appendChild(lk)}
   if(lk.getAttribute('href')!==url)lk.setAttribute('href',url);
   const base=d.getElementById('fonte-base');if(base)base.remove();
-  if(!opt.previa){try{localStorage.setItem('constita-tema',JSON.stringify({css:txt,attrs:at,fonte:url}))}catch(e){}}
+  if(!opt.previa){try{localStorage.setItem('loja-tema',JSON.stringify({css:txt,attrs:at,fonte:url}))}catch(e){}}
   return n;
 }
 function limpar(){
   const d=document,s=d.getElementById('tema');if(s)s.remove();
   const l=d.getElementById('fonte-tema');if(l)l.remove();
   ['data-modo','data-cab','data-abertura','data-cartao'].forEach(k=>d.documentElement.removeAttribute(k));
-  try{localStorage.removeItem('constita-tema')}catch(e){}
+  try{localStorage.removeItem('loja-tema')}catch(e){}
 }
 
 g.Tema={FONTES:FONTES,PRESETS:PRESETS,PADRAO:PADRAO,achar:achar,pesosDe:pesosDe,normalizar:normalizar,css:css,atributos:atributos,fontesUrl:fontesUrl,

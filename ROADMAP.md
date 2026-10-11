@@ -1,4 +1,4 @@
-# Planejamento — CONSTITA
+# Planejamento
 
 Ideias e próximos passos **ainda não implementados**. A visão de plataforma multiloja está em [ARQUITETURA.md](ARQUITETURA.md). O que já foi feito está no
 [Changelog](README.md#changelog) do `README.md`.
@@ -29,6 +29,13 @@ Legenda: **A** = alta prioridade · **M** = média · **B** = baixa.
 - [ ] **B — Hospedar as fontes** em WOFF2 próprio (mais rápido e sem requisição ao Google).
 - [ ] **B — Temas agendados** (Natal, Black Friday) com data de início e fim.
 - [ ] **B — Editor visual de seções** (ordem e visibilidade de abertura, carrossel, marcas e novidades).
+
+## Produto e ramos de negócio
+
+- [ ] **A — Aba Suporte** no painel (ajuda, contato, tutoriais curtos e envio de dúvidas).
+- [ ] **M — Campos extras por ramo** (atributos personalizados: voltagem, capacidade, data de entrega, material…).
+- [ ] **M — Mais modelos de ramo** (cosméticos, pet shop, livraria, joias, casa e decoração, alimentos).
+- [ ] **B — Textos do site traduzíveis** (inglês/espanhol) e moeda configurável.
 
 ## Painel (`/admin/`)
 

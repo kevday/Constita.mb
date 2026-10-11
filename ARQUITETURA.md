@@ -85,7 +85,7 @@ passa a **preencher essas variáveis por loja**.
 
 ### 4.1 Especificação (`tema` na configuração da loja)
 
-Já **implementada** no site atual (`tema.js` + `admin/temas.html`); na plataforma, o mesmo bloco passa a
+Já **implementada** no site atual (`tema.js` + aba Aparência do painel); na plataforma, o mesmo bloco passa a
 ficar em `tenants.tema` (JSONB) e é servido no snapshot.
 
 ```json
@@ -114,7 +114,7 @@ ficar em `tenants.tema` (JSONB) e é servido no snapshot.
 - `forma.raio`, `densidade` e `layout` viram variáveis extras (`--raio`, `--gap`, …).
 
 ### 4.3 Presets
-Pontos de partida que o lojista só ajusta: **Atelier** (o visual atual: Cormorant
+Pontos de partida que o lojista só ajusta: **Atelier** (Cormorant
 Garamond + Inter, creme/marrom/verde), **Minimal** (branco, preto, Inter),
 **Vibrante** (cor de destaque forte, cantos arredondados), **Noturno** (escuro por padrão).
 
