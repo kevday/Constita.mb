@@ -3,24 +3,24 @@
   "whatsapp": "5547996333331",
   "instagram": "kevin.net.br",
   "horario": "Atendimento de segunda a sábado, 9h às 19h",
-  "msgPadrao": "Olá! Vim pelo site do Kevin",
-  "msgNovidades": "Olá tudo bem?, gostaria de receber as promoções da loja! 😀",
-  "aviso": "Agora 100% online, com atendimento pelo WhatsApp.",
+  "msgPadrao": "Olá! Vim pelo site e gostaria de mais informações.",
+  "msgNovidades": "Olá! Gostaria de receber as novidades e promoções da loja.",
+  "aviso": "Garantia e suporte pelo WhatsApp.",
   "hero": {
-    "eyebrow": "O último capítulo da coleção atual",
-    "chamada": "Últimas peças.",
-    "destaque": "Nova fase.",
-    "texto": "Estamos encerrando uma coleção para abrir espaço para algo novo. Aproveite as últimas peças disponíveis enquanto preparamos o próximo capítulo da nossa história.",
-    "nota": "Últimas peças. Novos caminhos."
+    "eyebrow": "Tecnologia",
+    "chamada": "Equipamentos e acessórios",
+    "destaque": "com garantia.",
+    "texto": "Periféricos, armazenamento, redes e muito mais. Consulte disponibilidade e finalize pelo WhatsApp.",
+    "nota": "Informática e eletrônicos"
   },
   "destaques": {
     "titulo": "Em destaque",
     "quantidade": 8
   },
   "pecas": {
-    "eyebrow": "Quantidades limitadas",
-    "titulo": "Últimas peças disponíveis",
-    "texto": "Uma seleção especial das peças que ainda estão disponíveis. Quantidades limitadas e sem reposição."
+    "eyebrow": "Catálogo",
+    "titulo": "Nossos produtos",
+    "texto": "Escolha a versão, adicione ao carrinho e finalize pelo WhatsApp."
   },
   "atendimento": {
     "eyebrow": "Atendimento online",
@@ -71,14 +71,14 @@
     }
   ],
   "novidades": {
-    "eyebrow": "Lista de novidades",
-    "titulo": "Quer saber primeiro quando a nova coleção chegar?",
-    "texto": "Cadastre-se para receber novidades, lançamentos e condições especiais da nova fase.",
-    "botao": "Quero fazer parte",
-    "ok": "Obrigada! Seu cadastro segue pelo WhatsApp — é só enviar a mensagem."
+    "eyebrow": "Ofertas",
+    "titulo": "Receba ofertas por WhatsApp",
+    "texto": "Cadastre-se para ser avisado de promoções e reposições.",
+    "botao": "Quero receber",
+    "ok": "Quase lá: envie a mensagem que abrimos no WhatsApp para concluir."
   },
-  "rodape": "Loja de demonstração.",
-  "rodape2": "Aqui você da seu próximo passo para o digital.",
+  "rodape": "Tecnologia com suporte de verdade.",
+  "rodape2": "Obrigado pela visita!",
   "cupons": [
     {
       "codigo": "COMPRA10",
@@ -121,12 +121,12 @@
     "preset": "mono",
     "cores": {
       "fundo": "#ffffff",
-      "cartao": "#f4f4f4",
+      "cartao": "#f5f5f4",
       "texto": "#111111",
-      "suave": "#757575",
-      "linha": "#e0e0e0",
-      "destaque": "#ff5a1f",
-      "destaqueTexto": "#111111",
+      "suave": "#5f5f5f",
+      "linha": "#e4e4e2",
+      "destaque": "#111111",
+      "destaqueTexto": "#ffffff",
       "botao": "#111111",
       "botaoTexto": "#ffffff"
     },
@@ -154,5 +154,19 @@
       "colunasDesktop": 4,
       "densidade": "confortavel"
     }
+  },
+  "termos": {
+    "item": "produto",
+    "itens": "produtos",
+    "genero": "m",
+    "tamanho": "Versão",
+    "cor": "Cor",
+    "selo1": "Última unidade",
+    "selo2": "Poucas unidades"
+  },
+  "secoes": {
+    "destaques": true,
+    "novaFase": false,
+    "novidades": false
   }
 }
