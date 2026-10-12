@@ -5,13 +5,13 @@
   "horario": "Atendimento de segunda a sábado, 9h às 19h",
   "msgPadrao": "Olá! Vim pelo site e gostaria de mais informações.",
   "msgNovidades": "Olá! Gostaria de receber as novidades e promoções da loja.",
-  "aviso": "Garantia e suporte pelo WhatsApp.",
+  "aviso": "Atendimento e pedidos pelo WhatsApp.",
   "hero": {
-    "eyebrow": "Tecnologia",
-    "chamada": "Equipamentos e acessórios",
-    "destaque": "com garantia.",
-    "texto": "Periféricos, armazenamento, redes e muito mais. Consulte disponibilidade e finalize pelo WhatsApp.",
-    "nota": "Informática e eletrônicos"
+    "eyebrow": "Bem-vindo",
+    "chamada": "Conheça nossos",
+    "destaque": "produtos.",
+    "texto": "Veja o catálogo, escolha o que precisa e finalize o pedido pelo WhatsApp.",
+    "nota": "Loja online"
   },
   "destaques": {
     "titulo": "Em destaque",
@@ -20,7 +20,7 @@
   "pecas": {
     "eyebrow": "Catálogo",
     "titulo": "Nossos produtos",
-    "texto": "Escolha a versão, adicione ao carrinho e finalize pelo WhatsApp."
+    "texto": "Escolha as opções, adicione ao carrinho e finalize pelo WhatsApp."
   },
   "atendimento": {
     "eyebrow": "Atendimento online",
@@ -71,14 +71,14 @@
     }
   ],
   "novidades": {
-    "eyebrow": "Ofertas",
-    "titulo": "Receba ofertas por WhatsApp",
-    "texto": "Cadastre-se para ser avisado de promoções e reposições.",
+    "eyebrow": "Novidades",
+    "titulo": "Quer receber nossas novidades?",
+    "texto": "Cadastre-se para saber de lançamentos e promoções.",
     "botao": "Quero receber",
     "ok": "Quase lá: envie a mensagem que abrimos no WhatsApp para concluir."
   },
-  "rodape": "Tecnologia com suporte de verdade.",
-  "rodape2": "Obrigado pela visita!",
+  "rodape": "Obrigado pela preferência.",
+  "rodape2": "Volte sempre!",
   "cupons": [
     {
       "codigo": "COMPRA10",
@@ -118,37 +118,37 @@
     ]
   },
   "tema": {
-    "preset": "mono",
+    "preset": "fresh",
     "cores": {
-      "fundo": "#ffffff",
-      "cartao": "#f5f5f4",
-      "texto": "#111111",
-      "suave": "#5f5f5f",
-      "linha": "#e4e4e2",
-      "destaque": "#111111",
+      "fundo": "#f2fafb",
+      "cartao": "#e2f1f3",
+      "texto": "#0f2f3a",
+      "suave": "#44636d",
+      "linha": "#cde4e8",
+      "destaque": "#087b91",
       "destaqueTexto": "#ffffff",
-      "botao": "#111111",
-      "botaoTexto": "#ffffff"
+      "botao": "#0f2f3a",
+      "botaoTexto": "#f2fafb"
     },
     "escuro": {
       "modo": "auto"
     },
     "fontes": {
-      "titulo": "Inter",
-      "texto": "Inter",
+      "titulo": "Outfit",
+      "texto": "Nunito",
       "pesoTitulo": 500,
       "caixaTitulo": "normal",
-      "espacoTitulo": -1,
-      "tamanhoBase": 15
+      "espacoTitulo": 0,
+      "tamanhoBase": 16
     },
     "forma": {
-      "raio": 0,
-      "botao": "quadrado"
+      "raio": 12,
+      "botao": "arredondado"
     },
     "layout": {
       "cabecalho": "fixo",
-      "abertura": "centro",
-      "cartao": "limpo",
+      "abertura": "esquerda",
+      "cartao": "moldura",
       "proporcao": "4/5",
       "colunasMobile": 2,
       "colunasDesktop": 4,
@@ -159,7 +159,7 @@
     "item": "produto",
     "itens": "produtos",
     "genero": "m",
-    "tamanho": "Versão",
+    "tamanho": "Opção",
     "cor": "Cor",
     "selo1": "Última unidade",
     "selo2": "Poucas unidades"
@@ -167,6 +167,6 @@
   "secoes": {
     "destaques": true,
     "novaFase": false,
-    "novidades": false
+    "novidades": true
   }
 }
